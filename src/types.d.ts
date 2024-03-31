@@ -15,3 +15,12 @@ declare module '@nlpjs/basic' {
 
   async function dockStart(config: object): Promise<DockStart>;
 }
+
+declare module '@nlpjs/lang-id' {
+  class StopwordsId {}
+
+  class StemmerId {
+    abstract tokenizeAndStem(input: string, arg1?: boolean): any;
+    stopwords: StopwordsId;
+  }
+}
