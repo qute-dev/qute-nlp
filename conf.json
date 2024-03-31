@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "nlp": {
+      "threshold": 0.5,
+      "autoLoad": true,
+      "autoSave": true,
+      "modelFileName": "./corpus/model.nlp",
+      "corpora": ["./corpus/basic.json"]
+    }
+  },
+  "use": ["Basic", "LangId", "ConsoleConnector"]
+}

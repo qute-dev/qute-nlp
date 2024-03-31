@@ -1,0 +1,25 @@
+{
+  "name": "Corpus",
+  "locale": "id-ID",
+  "data": [
+    {
+      "intent": "salam",
+      "utterances": [
+        "Halo",
+        "Selamat pagi",
+        "Selamat siang",
+        "Selamat sore",
+        "Selamat malam",
+        "Assalamualaikum"
+      ],
+      "answers": [
+        "Halo",
+        "Selamat pagi",
+        "Selamat siang",
+        "Selamat sore",
+        "Selamat malam",
+        "Waalaikumsalam"
+      ]
+    }
+  ]
+}
