@@ -79,7 +79,9 @@ function getNextAnswer(user: string): BotAnswer {
 function getSearchAnswer(resp: NlpReponse): BotAnswer {
   // console.log('[BOT] getSearchAnswer', resp.utterance);
 
-  const alts = resp.classifications.filter((c: any) => c.score >= 0.01);
+  const alts = resp.classifications
+    .filter((c: any) => c.score > 0)
+    .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
   const answer: BotAnswer = {
     source: 'quran',
@@ -94,7 +96,7 @@ function getSearchAnswer(resp: NlpReponse): BotAnswer {
     const verseId = parseInt(index[1]);
 
     answer.verses.push(ar.verses.find((v) => v.id === verseId));
-    answer.translations.push(ar.verses.find((v) => v.id === verseId));
+    answer.translations.push(id.verses.find((v) => v.id === verseId));
   }
 
   return answer;

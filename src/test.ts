@@ -11,9 +11,10 @@ async function testQuestion(text: string, debug = false) {
   const answer = await bot.getAnswer(resp);
 
   if (debug) {
-    console.log('[TEST] intent: ', resp.intent);
-    console.log('[TEST] entities: ', resp.entities);
-    console.log('[TEST] answer: ', answer.translations.length);
+    console.log('[TEST] intent:', resp.intent);
+    console.log('[TEST] entities:', resp.entities);
+    console.log('[TEST] classifications:', resp.classifications);
+    console.log('[TEST] answer:', answer.translations);
   }
 
   return answer;

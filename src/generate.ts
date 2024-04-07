@@ -42,7 +42,7 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   // intent berdasar ayat & tokennya
   for (const v of corpus.id.verses) {
     // const token = stemmer.tokenizeAndStem(v.text);
-    const utterances = [v.text.replace(/[^a-zA-Z ]/gi, '').toLowerCase()];
+    const utterances = [v.text.replace(/[^a-zA-Z ]/gi, ' ').toLowerCase()];
     const answers = [`${v.id}`];
 
     data.push({ intent: `verse_${v.id}`, utterances, answers });
