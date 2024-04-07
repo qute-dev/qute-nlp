@@ -1,11 +1,11 @@
 {
   "name": "qute-nlp",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Quran with NLP.js",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "rimraf ./dist && tsc",
+    "build": "rimraf ./dist && tsc && cp ./src/conf.json ./dist/conf.json",
     "start": "npm run build && node ./dist/index.js",
     "generate": "ts-node ./src/generate.ts && rimraf ./dist/model.nlp",
     "console": "cd console && node index.js",
