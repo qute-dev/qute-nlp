@@ -1,6 +1,6 @@
 {
   "name": "qute-nlp",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "QUTE NLP API Service",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "@commitlint/config-conventional": "^17.8.1",
     "@types/fs-extra": "^11.0.4",
     "@types/koa": "^2.15.0",
+    "@types/koa__cors": "^5.0.0",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-json": "^2.0.23",
     "@types/koa-pino-logger": "^3.0.4",
@@ -34,6 +35,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "@nlpjs/basic": "^4.27.0",
     "@nlpjs/lang-id": "^4.26.1",
     "dotenv": "^16.3.1",

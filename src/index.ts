@@ -3,6 +3,7 @@ import 'dotenv/config';
 import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
 import * as json from 'koa-json';
+import cors from '@koa/cors';
 
 import { info, logger } from './logger';
 import { router } from './router';
@@ -18,6 +19,7 @@ async function start() {
   const app = new Koa.default();
   app.use(json.default());
   app.use(bodyParser.default());
+  app.use(cors());
   app.use(router.routes());
   app.use(router.allowedMethods());
   app.listen(Number(PORT), HOST as string);
