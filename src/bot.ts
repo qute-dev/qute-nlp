@@ -130,7 +130,7 @@ function getGreeting(resp: NlpReponse, user: string): BotMessage {
     source: 'other',
     action: 'greeting',
     message: resp.answer || resp.answers[0],
-    next: true,
+    next: false,
   };
 }
 

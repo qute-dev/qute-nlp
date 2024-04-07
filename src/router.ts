@@ -20,7 +20,7 @@ router.post('/query', async (ctx, next) => {
   info('[POST] /query', { user });
 
   const resp = await process(text);
-  const result = await getAnswer(resp);
+  const result = await getAnswer(resp, user);
 
   debug('[POST] /query:result', result);
 
