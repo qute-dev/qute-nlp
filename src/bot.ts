@@ -1,5 +1,6 @@
 import { loadQuran } from 'qute-corpus';
 import { BotAnswer, NlpReponse } from './models';
+import { debug } from './logger';
 
 const { ar, id } = loadQuran();
 
@@ -12,7 +13,7 @@ function getVerses(
 ): BotAnswer {
   if (!verseEnd) verseEnd = verseStart;
 
-  // console.log('[BOT] getVerses', { chapterNo, verseStart, verseEnd });
+  debug('[BOT] getVerses', { chapterNo, verseStart, verseEnd });
 
   const chapter = id.chapters[chapterNo - 1];
 
@@ -51,7 +52,7 @@ function getVerse(verseId: number): BotAnswer {
 }
 
 function getNextAnswer(user: string): BotAnswer {
-  // console.log('[BOT] getNextAnswer', user);
+  debug('[BOT] getNextAnswer', user);
 
   const last = records.get(user);
 
@@ -77,7 +78,7 @@ function getNextAnswer(user: string): BotAnswer {
 }
 
 function getSearchAnswer(resp: NlpReponse): BotAnswer {
-  // console.log('[BOT] getSearchAnswer', resp.utterance);
+  debug('[BOT] getSearchAnswer', resp.utterance);
 
   const alts = resp.classifications
     .filter((c: any) => c.score > 0)
@@ -131,12 +132,14 @@ export async function getAnswer(
     (e) => e.entity === 'chapter' && e.accuracy >= 0.7
   );
 
-  // console.log('[BOT] getAnswer:entities', {
-  //   verseEntity,
-  //   verseRangeEntity,
-  //   chapterNoEntity,
-  //   chapterEntity,
-  // });
+  const ents = {
+    verseEntity,
+    verseRangeEntity,
+    chapterNoEntity,
+    chapterEntity,
+  };
+
+  debug('[BOT] getAnswer:entities', ents);
 
   let chapter = 0;
   let verseStart = 0;

@@ -1,8 +1,12 @@
+import 'dotenv/config';
+
 import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
 
+import { log } from './logger';
+
 async function buildEntities(meta: Meta) {
-  console.log('Building entities...');
+  log('Building entities...');
 
   const options: any = {};
 
@@ -27,7 +31,7 @@ async function buildEntities(meta: Meta) {
 }
 
 function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
-  console.log('Building intents...');
+  log('Building intents...');
 
   const data: {
     intent: string;

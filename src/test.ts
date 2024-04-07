@@ -1,21 +1,22 @@
+import 'dotenv/config';
+
 import assert from 'assert';
 
 import * as nlp from './nlp';
 import * as bot from './bot';
 import { BotAnswer } from './models';
+import { debug, log } from './logger';
 
-async function testQuestion(text: string, debug = false) {
-  console.log('[TEST]', text);
+async function testQuestion(text: string) {
+  log('[TEST]', text);
 
   const resp = await nlp.process(text);
   const answer = await bot.getAnswer(resp);
 
-  if (debug) {
-    console.log('[TEST] intent:', resp.intent);
-    console.log('[TEST] entities:', resp.entities);
-    console.log('[TEST] classifications:', resp.classifications);
-    console.log('[TEST] answer:', answer.translations);
-  }
+  debug('[TEST] intent:', resp.intent);
+  debug('[TEST] entities:', resp.entities);
+  debug('[TEST] classifications:', resp.classifications);
+  debug('[TEST] answer:', answer.translations);
 
   return answer;
 }
