@@ -25,6 +25,7 @@ async function buildEntities(meta: Meta) {
     verse_no: '/\\s+\\d+$/gi', // ex: al fatihah 3
     verse_range: '/\\d+\\s*\\-\\s*\\d+$/gi', // ex: al baqarah 1-5
     chapter_no: '/\\s+\\d+\\s*$/gi', // ex: surat 13 2-3
+    chapter_start_no: '/^\\d+\\s.*$/gi', // ex: 13 2
   };
 
   return { chapter: { options }, ...regexEntities };
@@ -66,6 +67,7 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
       'surat @chapter @verse_no',
       'surat @chapter_no @verse_no',
       '@chapter @verse_no',
+      '@chapter_no @verse_no',
     ],
     actions: [
       {

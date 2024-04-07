@@ -44,9 +44,17 @@ async function testQuran() {
   answer = await testQuestion('alfatihah 5');
   assert(answer.data.chapter.id === 1 && answer.data.verses.length === 1);
 
+  // ayat tersimpel
+  answer = await testQuestion('2 185');
+  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 1);
+
   // ayat range
   answer = await testQuestion('maidah 1-7');
   assert(answer.data.chapter.id === 5 && answer.data.verses.length === 7);
+
+  // ayat range simple
+  answer = await testQuestion('11 2-4');
+  assert(answer.data.chapter.id === 11 && answer.data.verses.length === 3);
 
   // cari
   answer = await testQuestion('surga neraka');

@@ -26,12 +26,14 @@ export async function getAnswer(
   // ga ada entity kedetek, berarti pencarian
   else if (!entities.length) answer = getSearchAnswer(resp.classifications);
   // cari di entity2
-  else answer = getEntityAnswer(entities, user);
+  else answer = getEntityAnswer(entities);
 
   answer.from = 'bot';
   answer.platform = platform;
 
-  if (answer.data?.verses?.length > 10) {
+  if (answer.data?.verses?.length >= 10) {
+    answer.data.next = true;
+
     // 10 terakhir
     const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
     answer.data.translations.splice(10, answer.data.verses.length - 10);
@@ -67,7 +69,7 @@ function getNextAnswer(user: string): Message {
   return getVersesByIds(verseIds);
 }
 
-function getEntityAnswer(entities: any[], user: string): Message {
+function getEntityAnswer(entities: any[]): Message {
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
   );
@@ -75,7 +77,9 @@ function getEntityAnswer(entities: any[], user: string): Message {
     (e) => e.entity === 'verse_range' && e.accuracy >= 0.1
   );
   const chapterNoEntity = entities.filter(
-    (e) => e.entity === 'chapter_no' && e.accuracy >= 0.1
+    (e) =>
+      (e.entity === 'chapter_no' || e.entity === 'chapter_start_no') &&
+      e.accuracy >= 0.1
   );
   const chapterEntity = entities.filter(
     (e) => e.entity === 'chapter' && e.accuracy >= 0.7
