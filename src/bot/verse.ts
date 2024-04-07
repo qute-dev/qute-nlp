@@ -1,12 +1,12 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 
 import { debug } from '../logger';
 import { Message } from '../models';
 
-const { ar, id } = loadQuran();
+const { ar, id, meta } = loadQuran();
 
-export function getVerses(
+export function getVerseRange(
   chapterNo: number,
   verseStart: number,
   verseEnd: number
@@ -26,7 +26,7 @@ export function getVerses(
   );
 
   return {
-    id: randomUUID(),
+    id: uuid(),
     time: Date.now(),
     source: 'quran',
     action: 'index',
@@ -39,20 +39,34 @@ export function getVerses(
   };
 }
 
-export function getVerse(verseId: number): Message {
-  const verse = ar.verses.find((v) => v.id === verseId);
-  const chapter = ar.chapters.find((c) => c.id === verse.chapter);
-
-  return {
-    id: randomUUID(),
+export function getVersesByIds(verseIds: number[]): Message {
+  const answer: Message = {
+    id: uuid(),
     time: Date.now(),
     source: 'quran',
     action: 'index',
     data: {
-      chapter,
-      verses: [verse],
-      translations: [id.verses.find((v) => v.id === verseId)],
+      verses: [],
+      translations: [],
       next: true,
     },
   };
+
+  for (const verseId of verseIds) {
+    const verse = ar.verses.find((v) => v.id === verseId);
+    const trans = id.verses.find((v) => v.id === verseId);
+
+    answer.data.verses.push(verse);
+    answer.data.translations.push(trans);
+  }
+
+  // list chapter
+  const chapters = [...new Set(answer.data.verses.map((v) => v.chapter))];
+
+  // kalau chapter hanya 1, tambahkan chapter
+  if (chapters.length === 1) {
+    answer.data.chapter = meta.chapters.find((c) => c.id === chapters[0]);
+  }
+
+  return answer;
 }

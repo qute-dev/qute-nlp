@@ -1,12 +1,12 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuid } from 'uuid';
 import { debug } from '../logger';
-import { Response, Message, PlatformType } from '../models';
+import { Response, Message } from '../models';
 
 export function getGreeting(resp: Response): Message {
   debug('[BOT] getGreeting', resp.intent);
 
   return {
-    id: randomUUID(),
+    id: uuid(),
     time: Date.now(),
     source: 'other',
     action: 'greeting',

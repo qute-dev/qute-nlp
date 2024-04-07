@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 import { debug } from '../logger';
 import { Message, PlatformType } from '../models';
@@ -13,7 +13,7 @@ export function getSearchAnswer(classifications: any[]): Message {
     .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
   const answer: Message = {
-    id: randomUUID(),
+    id: uuid(),
     time: Date.now(),
     source: 'quran',
     action: 'search',
