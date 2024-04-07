@@ -18,9 +18,9 @@ async function buildEntities(meta: Meta) {
   }
 
   const regexEntities = {
-    chapter_no: '/s+d+s*$/gi', // ex: surat 13 2-3
-    verse_no: '/s+d+$/gi', // ex: al fatihah 3
-    verse_range: '/d+s*-s*d+$/gi', // ex: al baqarah 1-5
+    verse_no: '/\\s+\\d+$/gi', // ex: al fatihah 3
+    verse_range: '/\\d+\\s*\\-\\s*\\d+$/gi', // ex: al baqarah 1-5
+    chapter_no: '/\\s+\\d+\\s*$/gi', // ex: surat 13 2-3
   };
 
   return { chapter: { options }, ...regexEntities };
@@ -42,7 +42,7 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   // intent berdasar ayat & tokennya
   for (const v of corpus.id.verses) {
     // const token = stemmer.tokenizeAndStem(v.text);
-    const utterances = [v.text];
+    const utterances = [v.text.replace(/[^a-zA-Z ]/gi, '').toLowerCase()];
     const answers = [`${v.id}`];
 
     data.push({ intent: `verse_${v.id}`, utterances, answers });
@@ -58,13 +58,16 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   data.push({
     intent: 'verse',
     utterances: [
-      'surat @chapter ayat @verse',
-      'surat @chapter @verse',
-      'surat @chapter_no @verse',
-      '@chapter @verse',
+      'surat @chapter ayat @verse_no',
+      'surat @chapter @verse_no',
+      'surat @chapter_no @verse_no',
+      '@chapter @verse_no',
     ],
     actions: [
-      { name: 'getVerse', parameters: ['@chapter', '@chapter_no', '@verse'] },
+      {
+        name: 'getVerse',
+        parameters: ['@chapter', '@chapter_no', '@verse_no'],
+      },
     ],
   });
 
@@ -92,7 +95,7 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   // perintah lanjut
   data.push({
     intent: 'next',
-    utterances: ['lanjut', 'next', 'l'],
+    utterances: ['lanjut', 'next'],
   });
 
   return data;
