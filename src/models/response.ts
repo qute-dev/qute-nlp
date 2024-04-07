@@ -1,20 +1,4 @@
-import { Chapter, Verse } from 'qute-corpus';
-
-export interface BotMessage {
-  id: string;
-  time: number;
-  platform?: 'web' | 'wa' | 'tele' | 'ig' | 'fb';
-  user: string;
-  source: 'quran' | 'tafsir' | 'other';
-  action: 'search' | 'index' | 'greeting';
-  chapter?: Chapter;
-  verses?: Verse[];
-  translations?: Verse[];
-  message?: string;
-  next?: boolean;
-}
-
-export interface NlpReponse {
+export interface Response {
   locale: 'id' | 'en' | 'ar';
   utterance: string;
   settings: any;
