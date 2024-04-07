@@ -1,0 +1,14 @@
+@host = http://127.0.0.1:7777
+@user = 6285881830730
+
+### PING
+GET {{host}}/
+
+### QUERY TEXT
+POST {{host}}/query
+Content-Type: application/json
+
+{
+    "user": "{{user}}",
+    "text": "al fatihah"
+}
