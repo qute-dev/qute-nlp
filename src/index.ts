@@ -7,8 +7,9 @@ import * as json from 'koa-json';
 import { info, logger } from './logger';
 import { router } from './router';
 import { init } from './nlp';
+import { env } from './env';
 
-const { NODE_ENV, DEBUG, HOST, PORT } = process.env;
+const { NODE_ENV, DEBUG, HOST, PORT } = env;
 
 async function start() {
   info('[APP] Starting NLP API server...', { NODE_ENV, DEBUG });
