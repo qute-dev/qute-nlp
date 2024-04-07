@@ -15,12 +15,12 @@ router.get('/', async (ctx, next) => {
 });
 
 router.post('/query', async (ctx, next) => {
-  const { user, text } = ctx.request.body as any;
+  const { user, platform, text } = ctx.request.body as any;
 
-  info('[POST] /query', { user });
+  info('[POST] /query', { user, platform });
 
   const resp = await process(text);
-  const result = await getAnswer(resp, user);
+  const result = await getAnswer(resp, user, platform);
 
   debug('[POST] /query:result', result);
 
