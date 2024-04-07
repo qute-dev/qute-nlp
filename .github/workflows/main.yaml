@@ -33,6 +33,9 @@ jobs:
       - name: Generate model
         run: npm run generate
 
+      - name: Train model
+        run: npm run train
+
   start:
     name: Start service
     runs-on: self-hosted

@@ -9,6 +9,7 @@
     "start": "npm run build && node ./dist/index.js",
     "generate": "ts-node ./src/generate.ts && rimraf ./dist/model.nlp",
     "console": "cd console && node index.js",
+    "train": "ts-node ./src/train.ts",
     "test": "ts-node ./src/test.ts"
   },
   "author": "QUTE",
