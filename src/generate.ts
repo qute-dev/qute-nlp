@@ -1,6 +1,5 @@
 import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
-import { StemmerId, StopwordsId } from '@nlpjs/lang-id';
 
 async function buildEntities(meta: Meta) {
   console.log('Building entities...');
@@ -18,13 +17,13 @@ async function buildEntities(meta: Meta) {
     ];
   }
 
-  const regex = {
+  const regexEntities = {
     chapter_no: '/s+d+s*$/gi', // ex: surat 13 2-3
     verse_no: '/s+d+$/gi', // ex: al fatihah 3
     verse_range: '/d+s*-s*d+$/gi', // ex: al baqarah 1-5
   };
 
-  return { surah: { options }, ...regex };
+  return { chapter: { options }, ...regexEntities };
 }
 
 function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
