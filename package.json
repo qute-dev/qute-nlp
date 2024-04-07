@@ -1,7 +1,7 @@
 {
   "name": "qute-nlp",
   "version": "0.5.1",
-  "description": "Quran with NLP.js",
+  "description": "QUTE NLP API Service",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
