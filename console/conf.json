@@ -5,7 +5,7 @@
       "autoLoad": true,
       "autoSave": true,
       "modelFileName": "../dist/model.nlp",
-      "corpora": ["../corpus/basic.json", "../corpus/quran-id.json"]
+      "corpora": ["../corpus/greeting.json", "../corpus/quran-id.json"]
     }
   },
   "use": ["Basic", "LangId", "ConsoleConnector"]

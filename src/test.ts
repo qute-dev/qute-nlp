@@ -4,27 +4,25 @@ import assert from 'assert';
 
 import * as nlp from './nlp';
 import * as bot from './bot';
-import { BotAnswer } from './models';
+import { BotMessage } from './models';
 import { debug, log } from './logger';
 
 async function testQuestion(text: string) {
-  log('[TEST]', text);
-
   const resp = await nlp.process(text);
   const answer = await bot.getAnswer(resp);
+
+  log(`[TEST] ${text} -> ${answer.message || answer.translations.length}`);
 
   debug('[TEST] intent:', resp.intent);
   debug('[TEST] entities:', resp.entities);
   debug('[TEST] classifications:', resp.classifications);
-  debug('[TEST] answer:', answer.translations);
+  debug('[TEST] answer details:', answer.translations);
 
   return answer;
 }
 
-async function runTest() {
-  await nlp.init();
-
-  let answer: BotAnswer;
+async function testQuran() {
+  let answer: BotMessage;
 
   // surat
   answer = await testQuestion('surat albaqara');
@@ -53,6 +51,24 @@ async function runTest() {
   // cari
   answer = await testQuestion('surga neraka');
   assert(!answer.chapter && answer.verses.length > 0);
+}
+
+async function testGreeting() {
+  let answer: BotMessage;
+
+  // sapaan
+  answer = await testQuestion('halo');
+  assert(!!answer.message);
+
+  // salam
+  answer = await testQuestion('assalamualaikum');
+  assert(!!answer.message);
+}
+
+async function runTest() {
+  await nlp.init();
+  await testGreeting();
+  await testQuran();
 }
 
 runTest();

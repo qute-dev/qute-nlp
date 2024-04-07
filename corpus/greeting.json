@@ -1,0 +1,43 @@
+{
+  "name": "Basic Corpus",
+  "locale": "id-ID",
+  "data": [
+    {
+      "intent": "greeting.sapa",
+      "utterances": [
+        "Halo",
+        "Hallo",
+        "Helo",
+        "Hai",
+        "Hei",
+        "Selamat pagi",
+        "Selamat siang",
+        "Selamat sore",
+        "Selamat malam"
+      ],
+      "answers": [
+        "Halo juga",
+        "Hai juga",
+        "Selamat pagi",
+        "Selamat siang",
+        "Selamat sore",
+        "Selamat malam"
+      ]
+    },
+    {
+      "intent": "greeting.salam",
+      "utterances": [
+        "Assalamualaikum",
+        "Assalamualaikum wr wb",
+        "Assalamualaikum warahmatullahi wabarakatuh",
+        "Salam",
+        "Salam alaikum"
+      ],
+      "answers": [
+        "Waalaikumsalam..",
+        "Waalaikumsalam warahmatullah..",
+        "Alaikum salam"
+      ]
+    }
+  ]
+}

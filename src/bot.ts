@@ -1,5 +1,6 @@
+import { randomUUID } from 'crypto';
 import { loadQuran } from 'qute-corpus';
-import { BotAnswer, NlpReponse } from './models';
+import { BotMessage, NlpReponse } from './models';
 import { debug } from './logger';
 
 const { ar, id } = loadQuran();
@@ -9,10 +10,9 @@ const records = new Map<string, { chapter: number; verse: number }>();
 function getVerses(
   chapterNo: number,
   verseStart: number,
-  verseEnd?: number
-): BotAnswer {
-  if (!verseEnd) verseEnd = verseStart;
-
+  verseEnd: number,
+  user: string
+): BotMessage {
   debug('[BOT] getVerses', { chapterNo, verseStart, verseEnd });
 
   const chapter = id.chapters[chapterNo - 1];
@@ -28,6 +28,10 @@ function getVerses(
   );
 
   return {
+    id: randomUUID(),
+    time: Date.now(),
+    platform: 'web',
+    user,
     source: 'quran',
     action: 'index',
     chapter,
@@ -37,11 +41,15 @@ function getVerses(
   };
 }
 
-function getVerse(verseId: number): BotAnswer {
+function getVerse(verseId: number, user: string): BotMessage {
   const verse = ar.verses.find((v) => v.id === verseId);
   const chapter = ar.chapters.find((c) => c.id === verse.chapter);
 
   return {
+    id: randomUUID(),
+    time: Date.now(),
+    platform: 'web',
+    user,
     source: 'quran',
     action: 'index',
     chapter,
@@ -51,13 +59,17 @@ function getVerse(verseId: number): BotAnswer {
   };
 }
 
-function getNextAnswer(user: string): BotAnswer {
+function getNextAnswer(user: string): BotMessage {
   debug('[BOT] getNextAnswer', user);
 
   const last = records.get(user);
 
   if (!last) {
     return {
+      id: randomUUID(),
+      time: Date.now(),
+      platform: 'web',
+      user,
       source: 'quran',
       action: 'index',
       chapter: null,
@@ -74,17 +86,21 @@ function getNextAnswer(user: string): BotAnswer {
 
   records.set(user, last);
 
-  return getVerses(last.chapter, start, end);
+  return getVerses(last.chapter, start, end, user);
 }
 
-function getSearchAnswer(resp: NlpReponse): BotAnswer {
-  debug('[BOT] getSearchAnswer', resp.utterance);
+function getSearchAnswer(classifications: any[], user: string): BotMessage {
+  debug('[BOT] getSearchAnswer');
 
-  const alts = resp.classifications
-    .filter((c: any) => c.score > 0)
+  const alts = classifications
+    .filter((c) => c.score > 0)
     .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
-  const answer: BotAnswer = {
+  const answer: BotMessage = {
+    id: randomUUID(),
+    time: Date.now(),
+    platform: 'web',
+    user,
     source: 'quran',
     action: 'search',
     verses: [],
@@ -103,11 +119,29 @@ function getSearchAnswer(resp: NlpReponse): BotAnswer {
   return answer;
 }
 
+function getGreeting(resp: NlpReponse, user: string): BotMessage {
+  debug('[BOT] getGreeting', resp.intent);
+
+  return {
+    id: randomUUID(),
+    time: Date.now(),
+    platform: 'web',
+    user,
+    source: 'other',
+    action: 'greeting',
+    message: resp.answer || resp.answers[0],
+    next: true,
+  };
+}
+
 export async function getAnswer(
   resp: NlpReponse,
   user = 'DEFAULT'
-): Promise<BotAnswer> {
+): Promise<BotMessage> {
   const { intent, entities } = resp;
+
+  // greeting
+  if (intent.startsWith('greeting')) return getGreeting(resp, user);
 
   // lanjut sesuai record
   if (intent === 'next') return getNextAnswer(user);
@@ -117,7 +151,7 @@ export async function getAnswer(
   //   return getVerse(parseInt(intent.split('_')[1]));
 
   // ga ada entity kedetek, berarti pencarian
-  if (!entities.length) return getSearchAnswer(resp);
+  if (!entities.length) return getSearchAnswer(resp.classifications, user);
 
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
@@ -179,5 +213,5 @@ export async function getAnswer(
     records.set(user, { chapter, verse: 11 });
   }
 
-  return getVerses(chapter, verseStart, verseEnd);
+  return getVerses(chapter, verseStart, verseEnd || verseStart, user);
 }

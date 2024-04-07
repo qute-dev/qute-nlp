@@ -1,11 +1,16 @@
 import { Chapter, Verse } from 'qute-corpus';
 
-export interface BotAnswer {
-  source: 'quran' | 'tafsir';
-  action: 'search' | 'index';
+export interface BotMessage {
+  id: string;
+  time: number;
+  platform?: 'web' | 'wa' | 'tele' | 'ig' | 'fb';
+  user: string;
+  source: 'quran' | 'tafsir' | 'other';
+  action: 'search' | 'index' | 'greeting';
   chapter?: Chapter;
-  verses: Verse[];
-  translations: Verse[];
+  verses?: Verse[];
+  translations?: Verse[];
+  message?: string;
   next?: boolean;
 }
 
