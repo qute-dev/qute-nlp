@@ -1,11 +1,14 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuid } from 'uuid';
+import { loadQuran } from 'qute-corpus';
 import { Response, Message, PlatformType } from '../models';
 import { debug } from '../logger';
 import { getGreeting } from './greeting';
 import { getSearchAnswer } from './search';
-import { getVerses } from './verse';
+import { getVerseRange, getVersesByIds } from './verse';
 
-const records = new Map<string, { chapter: number; verse: number }>();
+const { meta } = loadQuran();
+
+const records = new Map<string, number[]>(); // user => [verseId]
 
 export async function getAnswer(
   resp: Response,
@@ -28,31 +31,40 @@ export async function getAnswer(
   answer.from = 'bot';
   answer.platform = platform;
 
+  if (answer.data?.verses?.length > 10) {
+    // 10 terakhir
+    const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
+    answer.data.translations.splice(10, answer.data.verses.length - 10);
+
+    // simpan ke record
+    const verseIds = nexts.map((v) => v.id);
+
+    records.set(user, verseIds);
+  }
+
   return answer;
 }
 
 function getNextAnswer(user: string): Message {
   debug('[BOT] getNextAnswer', user);
 
-  const last = records.get(user);
+  const lasts = records.get(user);
 
-  if (!last) {
+  if (!lasts || !lasts.length) {
     return {
-      id: randomUUID(),
+      id: uuid(),
       time: Date.now(),
       source: 'cache',
-      action: 'next',
+      action: 'none',
     };
   }
 
-  const start = last.verse;
-  const end = last.verse + 9;
+  const verseIds = lasts.splice(0, 10);
 
-  last.verse += 10;
+  if (lasts.length) records.set(user, lasts);
+  else records.delete(user);
 
-  records.set(user, last);
-
-  return getVerses(last.chapter, start, end);
+  return getVersesByIds(verseIds);
 }
 
 function getEntityAnswer(entities: any[], user: string): Message {
@@ -111,10 +123,8 @@ function getEntityAnswer(entities: any[], user: string): Message {
   // batasi max ayat kalau surat yg tampil
   if (!verseStart && !verseEnd) {
     verseStart = 1;
-    verseEnd = 10;
-
-    records.set(user, { chapter, verse: 11 });
+    verseEnd = meta.chapters[chapter - 1].verses;
   }
 
-  return getVerses(chapter, verseStart, verseEnd || verseStart);
+  return getVerseRange(chapter, verseStart, verseEnd || verseStart);
 }
