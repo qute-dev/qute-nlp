@@ -8,7 +8,7 @@ const { ar, id } = loadQuran();
 export function getSearchAnswer(classifications: any[]): Message {
   debug('[BOT] getSearchAnswer');
 
-  const alts = classifications
+  const answers = classifications
     .filter((c) => c.score > 0)
     .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
@@ -20,11 +20,11 @@ export function getSearchAnswer(classifications: any[]): Message {
     data: {
       verses: [],
       translations: [],
-      next: false,
+      next: answers.length > 10,
     },
   };
 
-  for (const alt of alts) {
+  for (const alt of answers) {
     const index = alt.intent.split('verse_');
     const verseId = parseInt(index[1]);
 
