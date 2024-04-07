@@ -32,3 +32,12 @@ jobs:
 
       - name: Generate model
         run: npm run generate
+
+  start:
+    name: Start service
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Start NLP API service
+        run: sudo -S -p '' systemctl restart qute-nlp
