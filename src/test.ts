@@ -50,7 +50,11 @@ async function testQuran() {
 
   // cari
   answer = await testQuestion('surga neraka');
-  assert(!answer.data.chapter && answer.data.verses.length > 0);
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
+
+  // next hasil cari
+  answer = await testQuestion('next');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
 }
 
 async function testGreeting() {
