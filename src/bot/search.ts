@@ -54,7 +54,7 @@ export async function getSearchAnswer(resp: Response): Promise<Message> {
 }
 
 export async function initSearch() {
-  log(`[BOT] initSearch ${HOST}`);
+  log(`[BOT] initSearch ${MEILI_ADDRESS}`);
 
   const client = new MeiliSearch({
     host: MEILI_ADDRESS,
