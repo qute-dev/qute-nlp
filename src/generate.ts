@@ -4,6 +4,7 @@ import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
 
 import { log } from './logger';
+import { init } from './nlp';
 
 async function buildEntities(meta: Meta) {
   log('Building entities...');
@@ -24,8 +25,8 @@ async function buildEntities(meta: Meta) {
   const regexEntities = {
     verse_no: '/\\s+\\d+$/gi', // ex: al fatihah 3
     verse_range: '/\\d+\\s*\\-\\s*\\d+$/gi', // ex: al baqarah 1-5
-    chapter_no: '/\\s+\\d+\\s*$/gi', // ex: surat 13 2-3
-    chapter_start_no: '/^\\d+\\s.*$/gi', // ex: 13 2
+    chapter_no: '/\\s+\\d+\\s*?/gi', // ex: surat 13 2-3
+    chapter_start_no: '/^\\d+\\s.*?/gi', // ex: 13 2
   };
 
   return { chapter: { options }, ...regexEntities };
@@ -64,6 +65,7 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
     intent: 'verse',
     utterances: [
       'surat @chapter ayat @verse_no',
+      'surat @chapter_no ayat @verse_no',
       'surat @chapter @verse_no',
       'surat @chapter_no @verse_no',
       '@chapter @verse_no',
@@ -112,11 +114,16 @@ async function build() {
   const entities = await buildEntities(corpus.meta);
   const data = await buildIntents(corpus);
 
-  fse.writeJsonSync(
+  log('Saving corpus...');
+  await fse.writeJson(
     'corpus/quran-id.json',
     { name: 'Quran ID', locale: 'id-ID', data, entities },
     { spaces: 2 }
   );
+
+  log('Building models...');
+  await init();
+  log('Corpus and model built successfully!');
 }
 
 build();

@@ -30,11 +30,8 @@ jobs:
       - name: Build app
         run: npm run build
 
-      - name: Generate model
+      - name: Generate & train model
         run: npm run generate
-
-      - name: Train model
-        run: npm run train
 
   start:
     name: Start service

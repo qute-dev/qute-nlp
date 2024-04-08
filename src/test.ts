@@ -15,10 +15,22 @@ async function testQuestion(text: string) {
 
   debug('[TEST] intent:', resp.intent);
   debug('[TEST] entities:', resp.entities);
-  debug('[TEST] classifications:', resp.classifications);
-  debug('[TEST] answer details:', answer.data?.translations);
+  // debug('[TEST] classifications:', resp.classifications);
+  // debug('[TEST] answer details:', answer.data?.translations);
 
   return answer;
+}
+
+async function testGreeting() {
+  let answer: Message;
+
+  // sapaan
+  answer = await testQuestion('halo');
+  assert(!!answer.text);
+
+  // salam
+  answer = await testQuestion('assalamualaikum');
+  assert(!!answer.text);
 }
 
 async function testQuran() {
@@ -39,6 +51,10 @@ async function testQuran() {
   // ayat lengkap
   answer = await testQuestion('surat alfatihah ayat 5');
   assert(answer.data.chapter.id === 1 && answer.data.verses.length === 1);
+
+  // ayat angka
+  answer = await testQuestion('surat 2 ayat 10');
+  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 1);
 
   // ayat simple
   answer = await testQuestion('alfatihah 5');
@@ -63,18 +79,6 @@ async function testQuran() {
   // next hasil cari
   answer = await testQuestion('next');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
-}
-
-async function testGreeting() {
-  let answer: Message;
-
-  // sapaan
-  answer = await testQuestion('halo');
-  assert(!!answer.text);
-
-  // salam
-  answer = await testQuestion('assalamualaikum');
-  assert(!!answer.text);
 }
 
 async function runTest() {

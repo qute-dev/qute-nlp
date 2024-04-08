@@ -4,25 +4,8 @@
   "data": [
     {
       "intent": "greeting.sapa",
-      "utterances": [
-        "Halo",
-        "Hallo",
-        "Helo",
-        "Hai",
-        "Hei",
-        "Selamat pagi",
-        "Selamat siang",
-        "Selamat sore",
-        "Selamat malam"
-      ],
-      "answers": [
-        "Halo juga",
-        "Hai juga",
-        "Selamat pagi",
-        "Selamat siang",
-        "Selamat sore",
-        "Selamat malam"
-      ]
+      "utterances": ["Halo", "Hallo", "Helo", "Hai", "Hei"],
+      "answers": ["Halo juga", "Hai juga", "Hei kak", "Halo kak", "Hi juga"]
     },
     {
       "intent": "greeting.salam",
@@ -31,12 +14,26 @@
         "Assalamualaikum wr wb",
         "Assalamualaikum warahmatullahi wabarakatuh",
         "Salam",
-        "Salam alaikum"
+        "Salam alaikum",
+        "Aslmkm",
+        "Salamualaikum",
+        "Assalam",
+        "Asslm",
+        "Salamkum",
+        "Salam alaikum",
+        "Assalamu",
+        "Assalamu'alaik"
       ],
       "answers": [
         "Waalaikumsalam..",
         "Waalaikumsalam warahmatullah..",
-        "Alaikum salam"
+        "Alaikum salam",
+        "Wa'alaikum salam",
+        "Wa'alaikumsalam warahmatullahi wabarakatuh",
+        "Wa'alaikumus salam",
+        "Assalamualaikum juga",
+        "Wa'alaikumus salam, semoga dalam keadaan baik",
+        "Wa'alaikumsalam, terima kasih atas salamnya"
       ]
     }
   ]

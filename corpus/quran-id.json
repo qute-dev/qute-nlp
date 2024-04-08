@@ -56147,6 +56147,7 @@
       "intent": "verse",
       "utterances": [
         "surat @chapter ayat @verse_no",
+        "surat @chapter_no ayat @verse_no",
         "surat @chapter @verse_no",
         "surat @chapter_no @verse_no",
         "@chapter @verse_no",
@@ -56768,7 +56769,7 @@
     },
     "verse_no": "/\\s+\\d+$/gi",
     "verse_range": "/\\d+\\s*\\-\\s*\\d+$/gi",
-    "chapter_no": "/\\s+\\d+\\s*$/gi",
-    "chapter_start_no": "/^\\d+\\s.*$/gi"
+    "chapter_no": "/\\s+\\d+\\s*?/gi",
+    "chapter_start_no": "/^\\d+\\s.*?/gi"
   }
 }
