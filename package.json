@@ -1,6 +1,6 @@
 {
   "name": "qute-nlp",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "QUTE NLP API Service",
   "main": "index.js",
   "scripts": {

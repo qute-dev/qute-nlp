@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 import { Response, Message, PlatformType } from '../models';
-import { debug } from '../logger';
+import { debug, log } from '../logger';
 import { getGreeting } from './greeting';
 import { getSearchAnswer } from './search';
 import { getVerseRange, getVersesByIds } from './verse';
@@ -9,6 +9,16 @@ import { getVerseRange, getVersesByIds } from './verse';
 const { meta } = loadQuran();
 
 const records = new Map<string, number[]>(); // user => [verseId]
+
+export function getCache() {
+  const cache = {} as any;
+
+  records.forEach((verseIds, user) => {
+    cache[user] = verseIds;
+  });
+
+  return cache;
+}
 
 export async function getAnswer(
   resp: Response,
@@ -20,28 +30,45 @@ export async function getAnswer(
   let answer: Message = {};
 
   // greeting
-  if (intent.startsWith('greeting')) answer = getGreeting(resp);
+  if (intent.startsWith('greeting')) {
+    records.delete(user);
+    answer = getGreeting(resp);
+  }
   // lanjut sesuai record
-  else if (intent === 'next') answer = getNextAnswer(user);
+  else if (intent === 'next') {
+    answer = getNextAnswer(user);
+  }
   // ga ada entity kedetek, berarti pencarian
-  else if (!entities.length) answer = getSearchAnswer(resp.classifications);
+  else if (!entities.length) {
+    records.delete(user);
+    answer = getSearchAnswer(resp.classifications);
+  }
   // cari di entity2
-  else answer = getEntityAnswer(entities);
+  else {
+    records.delete(user);
+    answer = getEntityAnswer(entities);
+  }
 
   answer.from = 'bot';
   answer.platform = platform;
 
-  if (answer.data?.verses?.length >= 10) {
+  if (answer.data?.verses?.length > 10) {
     answer.data.next = true;
 
     // 10 terakhir
     const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
     answer.data.translations.splice(10, answer.data.verses.length - 10);
 
+    debug(`[BOT] nexts ${nexts.length}`);
+
     // simpan ke record
     const verseIds = nexts.map((v) => v.id);
 
     records.set(user, verseIds);
+  } else if (answer.data) {
+    // jawaban kurang dari 10, ga perlu next
+    answer.data.next = false;
+    records.delete(user);
   }
 
   return answer;
@@ -58,15 +85,11 @@ function getNextAnswer(user: string): Message {
       time: Date.now(),
       source: 'cache',
       action: 'none',
+      text: 'Data tidak ditemukan',
     };
   }
 
-  const verseIds = lasts.splice(0, 10);
-
-  if (lasts.length) records.set(user, lasts);
-  else records.delete(user);
-
-  return getVersesByIds(verseIds);
+  return getVersesByIds(lasts);
 }
 
 function getEntityAnswer(entities: any[]): Message {

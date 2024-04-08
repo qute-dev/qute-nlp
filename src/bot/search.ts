@@ -20,7 +20,6 @@ export function getSearchAnswer(classifications: any[]): Message {
     data: {
       verses: [],
       translations: [],
-      next: answers.length > 10,
     },
   };
 

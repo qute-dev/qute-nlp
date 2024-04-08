@@ -48,7 +48,6 @@ export function getVersesByIds(verseIds: number[]): Message {
     data: {
       verses: [],
       translations: [],
-      next: true,
     },
   };
 
