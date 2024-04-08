@@ -1,16 +1,15 @@
+import MeiliSearch from 'meilisearch';
 import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
-import { debug } from '../logger';
-import { Message, PlatformType } from '../models';
+import { debug, log } from '../logger';
+import { Message, Response } from '../models';
+import env from '../env';
 
 const { ar, id } = loadQuran();
+const { HOST, MEILI_ADDRESS, MEILI_KEY } = env;
 
-export function getSearchAnswer(classifications: any[]): Message {
+export async function getSearchAnswer(resp: Response): Promise<Message> {
   debug('[BOT] getSearchAnswer');
-
-  const answers = classifications
-    .filter((c) => c.score > 0)
-    .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
   const answer: Message = {
     id: uuid(),
@@ -23,6 +22,26 @@ export function getSearchAnswer(classifications: any[]): Message {
     },
   };
 
+  // cari dulu di meili search engine
+  const client = new MeiliSearch({
+    host: MEILI_ADDRESS,
+    apiKey: MEILI_KEY,
+  });
+
+  const result = await client
+    .index('qute-verses_id')
+    .search(resp.utterance, { attributesToRetrieve: ['id'] });
+
+  result.hits.forEach((hit) => {
+    answer.data.verses.push(ar.verses.find((v) => v.id === hit.id));
+    answer.data.translations.push(id.verses.find((v) => v.id === hit.id));
+  });
+
+  // ambil jawaban2 dari classification nlp
+  const answers = resp.classifications
+    .filter((c) => c.score > 0)
+    .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
+
   for (const alt of answers) {
     const index = alt.intent.split('verse_');
     const verseId = parseInt(index[1]);
@@ -32,4 +51,25 @@ export function getSearchAnswer(classifications: any[]): Message {
   }
 
   return answer;
+}
+
+export async function initSearch() {
+  log(`[BOT] initSearch ${HOST}`);
+
+  const client = new MeiliSearch({
+    host: MEILI_ADDRESS,
+    apiKey: MEILI_KEY,
+  });
+
+  let resp = await client
+    .index('qute-verses_ar')
+    .addDocuments(ar.verses, { primaryKey: 'id' });
+
+  log(`[BOT] initSearch:index verses-ar`, resp);
+
+  resp = await client
+    .index('qute-verses_id')
+    .addDocuments(id.verses, { primaryKey: 'id' });
+
+  log(`[BOT] initSearch:index verses-id`, resp);
 }

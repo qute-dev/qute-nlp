@@ -7,7 +7,7 @@ import { log } from './logger';
 
 let nlp: Nlp;
 
-export async function init() {
+export async function initNlp() {
   log('[nlp] Initializing NLP...');
 
   await fse.ensureDir('dist');

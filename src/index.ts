@@ -7,14 +7,14 @@ import cors from '@koa/cors';
 
 import { info, logger } from './logger';
 import { router } from './router';
-import { init } from './nlp';
+import { initNlp } from './nlp';
 import { env } from './env';
 
 const { NODE_ENV, DEBUG, HOST, PORT } = env;
 
 async function start() {
   info('[APP] Starting NLP API server...', { NODE_ENV, DEBUG });
-  await init();
+  await initNlp();
 
   const app = new Koa.default();
   app.use(json.default());

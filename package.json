@@ -1,6 +1,6 @@
 {
   "name": "qute-nlp",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "QUTE NLP API Service",
   "main": "index.js",
   "scripts": {
@@ -43,6 +43,7 @@
     "koa-bodyparser": "^4.4.1",
     "koa-json": "^2.0.2",
     "koa-router": "^12.0.1",
+    "meilisearch": "^0.38.0",
     "node-nlp": "^4.27.0",
     "pino": "^8.20.0",
     "pino-pretty": "^11.0.0",

@@ -41,7 +41,7 @@ export async function getAnswer(
   // ga ada entity kedetek, berarti pencarian
   else if (!entities.length) {
     records.delete(user);
-    answer = getSearchAnswer(resp.classifications);
+    answer = await getSearchAnswer(resp);
   }
   // cari di entity2
   else {

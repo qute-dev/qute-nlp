@@ -4,7 +4,8 @@ import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
 
 import { log } from './logger';
-import { init } from './nlp';
+import { initNlp } from './nlp';
+import { initSearch } from './bot';
 
 async function buildEntities(meta: Meta) {
   log('Building entities...');
@@ -114,16 +115,18 @@ async function build() {
   const entities = await buildEntities(corpus.meta);
   const data = await buildIntents(corpus);
 
-  log('Saving corpus...');
-  await fse.writeJson(
-    'corpus/quran-id.json',
-    { name: 'Quran ID', locale: 'id-ID', data, entities },
-    { spaces: 2 }
-  );
+  await fse.writeJson('corpus/quran-id.json', {
+    name: 'Quran ID',
+    locale: 'id-ID',
+    data,
+    entities,
+  });
 
   log('Building models...');
-  await init();
-  log('Corpus and model built successfully!');
+  await initNlp();
+
+  log('Building search index...');
+  await initSearch();
 }
 
 build();
