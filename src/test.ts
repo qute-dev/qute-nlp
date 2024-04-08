@@ -15,8 +15,8 @@ async function testQuestion(text: string) {
 
   debug('[TEST] intent:', resp.intent);
   debug('[TEST] entities:', resp.entities);
-  // debug('[TEST] classifications:', resp.classifications);
-  // debug('[TEST] answer details:', answer.data?.translations);
+  debug('[TEST] classifications:', resp.classifications);
+  debug('[TEST] answer details:', answer.data?.translations);
 
   return answer;
 }
@@ -33,7 +33,7 @@ async function testGreeting() {
   assert(!!answer.text);
 }
 
-async function testQuran() {
+async function testIndex() {
   let answer: Message;
 
   // surat
@@ -71,6 +71,10 @@ async function testQuran() {
   // ayat range simple
   answer = await testQuestion('11 2-4');
   assert(answer.data.chapter.id === 11 && answer.data.verses.length === 3);
+}
+
+async function testSearch() {
+  let answer: Message;
 
   // cari
   answer = await testQuestion('surga neraka');
@@ -79,6 +83,10 @@ async function testQuran() {
   // next hasil cari
   answer = await testQuestion('next');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
+
+  // cari yg ga ada
+  answer = await testQuestion('pacul');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
 }
 
 async function testCache() {
@@ -107,7 +115,8 @@ async function testCache() {
 async function runTest() {
   await nlp.init();
   await testGreeting();
-  await testQuran();
+  await testIndex();
+  await testSearch();
   await testCache();
 }
 
