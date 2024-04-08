@@ -1,7 +1,7 @@
 import * as Router from 'koa-router';
 
 import { debug, info } from './logger';
-import { getAnswer } from './bot';
+import { getAnswer, getCache } from './bot';
 import { process } from './nlp';
 
 export const router = new Router.default();
@@ -10,6 +10,14 @@ router.get('/', async (ctx, next) => {
   info('[GET] /');
 
   ctx.body = 'OK';
+
+  await next();
+});
+
+router.get('/cache', async (ctx, next) => {
+  info('[GET] /cache');
+
+  ctx.body = getCache();
 
   await next();
 });

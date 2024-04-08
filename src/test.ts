@@ -81,10 +81,34 @@ async function testQuran() {
   assert(!answer.data.chapter && answer.data.verses.length === 10);
 }
 
+async function testCache() {
+  let answer: Message;
+  let cache: any;
+
+  // surat
+  answer = await testQuestion('surat albaqara');
+  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
+
+  // cek cache
+  cache = await bot.getCache();
+  assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10);
+
+  for (let i = 2; i <= 5; i++) {
+    // lanjut
+    answer = await testQuestion('lanjut');
+    assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
+
+    // cek cache lagi
+    cache = await bot.getCache();
+    assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10 * i);
+  }
+}
+
 async function runTest() {
   await nlp.init();
   await testGreeting();
   await testQuran();
+  await testCache();
 }
 
 runTest();
