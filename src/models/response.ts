@@ -11,7 +11,7 @@ export interface Response {
     explanation: any[];
   };
   explanation: { token: string; stem: string; weight: number }[];
-  classifications: { intent: string; score: boolean }[];
+  classifications: { intent: string; score: number }[];
   intent: string;
   score: 1;
   domain: 'default' | any;
