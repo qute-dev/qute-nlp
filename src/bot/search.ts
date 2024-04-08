@@ -61,9 +61,15 @@ export async function initSearch() {
     apiKey: MEILI_KEY,
   });
 
-  let resp = await client.index('qute-verses_ar').addDocuments(ar.verses);
+  let resp = await client
+    .index('qute-verses_ar')
+    .addDocuments(ar.verses, { primaryKey: 'id' });
+
   log(`[BOT] initSearch:index verses-ar`, resp);
 
-  resp = await client.index('qute-verses_id').addDocuments(id.verses);
+  resp = await client
+    .index('qute-verses_id')
+    .addDocuments(id.verses, { primaryKey: 'id' });
+
   log(`[BOT] initSearch:index verses-id`, resp);
 }

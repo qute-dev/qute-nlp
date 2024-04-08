@@ -2,14 +2,14 @@ import 'dotenv/config';
 
 import assert from 'assert';
 
-import * as nlp from './nlp';
-import * as bot from './bot';
 import { Message } from './models';
 import { debug, log } from './logger';
+import { initNlp, process } from './nlp';
+import { getAnswer, getCache } from './bot';
 
 async function testQuestion(text: string) {
-  const resp = await nlp.process(text);
-  const answer = await bot.getAnswer(resp);
+  const resp = await process(text);
+  const answer = await getAnswer(resp);
 
   log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
 
@@ -98,7 +98,7 @@ async function testCache() {
   assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
 
   // cek cache
-  cache = await bot.getCache();
+  cache = await getCache();
   assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10);
 
   for (let i = 2; i <= 5; i++) {
@@ -107,13 +107,13 @@ async function testCache() {
     assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
 
     // cek cache lagi
-    cache = await bot.getCache();
+    cache = await getCache();
     assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10 * i);
   }
 }
 
 async function runTest() {
-  await nlp.init();
+  await initNlp();
   await testGreeting();
   await testIndex();
   await testSearch();
