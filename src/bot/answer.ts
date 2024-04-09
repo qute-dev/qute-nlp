@@ -29,6 +29,10 @@ export async function getAnswer(
 
   let answer: Message = {};
 
+  const keywordsEntity = entities.filter(
+    (e) => e.entity === 'keywords' && e.accuracy >= 0.1
+  );
+
   // greeting
   if (intent.startsWith('greeting')) {
     records.delete(user);
@@ -37,6 +41,12 @@ export async function getAnswer(
   // lanjut sesuai record
   else if (intent === 'next') {
     answer = getNextAnswer(user);
+  }
+  // ada entity keyword search
+  else if (keywordsEntity.length) {
+    records.delete(user);
+    resp.utterance = keywordsEntity[0].sourceText.replace('cari', '').trim();
+    answer = await getSearchAnswer(resp);
   }
   // ga ada entity kedetek, berarti pencarian
   else if (!entities.length) {
@@ -62,7 +72,7 @@ export async function getAnswer(
     debug(`[BOT] nexts ${nexts.length}`);
 
     // simpan ke record
-    const verseIds = nexts.map((v) => v.id);
+    const verseIds = nexts.filter((v) => !!v).map((v) => v.id);
 
     records.set(user, verseIds);
   } else if (answer.data) {
@@ -150,7 +160,7 @@ function getEntityAnswer(entities: any[]): Message {
   // batasi max ayat kalau surat yg tampil
   if (!verseStart && !verseEnd) {
     verseStart = 1;
-    verseEnd = meta.chapters[chapter - 1].verses;
+    verseEnd = meta.chapters[chapter - 1]?.verses;
   }
 
   return getVerseRange(chapter, verseStart, verseEnd || verseStart);
