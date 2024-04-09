@@ -28,6 +28,7 @@ async function buildEntities(meta: Meta) {
     verse_range: '/\\d+\\s*\\-\\s*\\d+$/gi', // ex: al baqarah 1-5
     chapter_no: '/\\s+\\d+\\s*?/gi', // ex: surat 13 2-3
     chapter_start_no: '/^\\d+\\s.*?/gi', // ex: 13 2
+    keywords: '/cari\\s.+/gi', // semua kata di cari
   };
 
   return { chapter: { options }, ...regexEntities };
@@ -99,6 +100,12 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
         ],
       },
     ],
+  });
+
+  // perintah cari
+  data.push({
+    intent: 'search',
+    utterances: ['cari @keywords', 'cari @keywords di @chapter'],
   });
 
   // perintah lanjut

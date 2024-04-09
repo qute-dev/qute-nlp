@@ -13,10 +13,10 @@ async function testQuestion(text: string) {
 
   log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
 
-  debug('[TEST] intent:', resp.intent);
+  debug(`[TEST] intent: ${resp.intent}`);
   debug('[TEST] entities:', resp.entities);
-  debug('[TEST] classifications:', resp.classifications);
   debug('[TEST] answer details:', answer.data?.translations);
+  // debug('[TEST] classifications:', resp.classifications);
 
   return answer;
 }
@@ -76,7 +76,19 @@ async function testIndex() {
 async function testSearch() {
   let answer: Message;
 
-  // cari
+  // dg cari
+  answer = await testQuestion('cari manusia');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
+
+  // dg cari nama surat
+  answer = await testQuestion('cari maryam');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
+
+  // TODO: cari di surat tertentu
+  // answer = await testQuestion('cari allah di al baqarah');
+  // assert(answer.data.chapter && answer.data.verses.length === 10);
+
+  // tanpa kata cari
   answer = await testQuestion('surga neraka');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
 
@@ -114,6 +126,7 @@ async function testCache() {
 
 async function runTest() {
   await initNlp();
+
   await testGreeting();
   await testIndex();
   await testSearch();
