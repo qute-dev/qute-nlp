@@ -43,8 +43,13 @@ export async function getSearchAnswer(resp: Response): Promise<Message> {
     .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
 
   for (const alt of answers) {
+    if (!alt.intent.startsWith('verse_')) continue;
+
     const index = alt.intent.split('verse_');
     const verseId = parseInt(index[1]);
+
+    // jika sudah ada, skip
+    if (result.hits.find((h) => h.id === verseId)) continue;
 
     answer.data.verses.push(ar.verses.find((v) => v.id === verseId));
     answer.data.translations.push(id.verses.find((v) => v.id === verseId));

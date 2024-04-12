@@ -81,6 +81,11 @@ export async function getAnswer(
     records.delete(user);
   }
 
+  // ga ada ayat
+  if (!answer.data?.verses?.length) {
+    answer.text = 'Data tidak ditemukan';
+  }
+
   return answer;
 }
 

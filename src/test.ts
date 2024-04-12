@@ -84,6 +84,14 @@ async function testSearch() {
   answer = await testQuestion('cari maryam');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
 
+  // jodoh
+  answer = await testQuestion('jodoh');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
+
+  // dg cari jodoh
+  answer = await testQuestion('cari jodoh');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
+
   // TODO: cari di surat tertentu
   // answer = await testQuestion('cari allah di al baqarah');
   // assert(answer.data.chapter && answer.data.verses.length === 10);
