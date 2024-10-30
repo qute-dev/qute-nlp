@@ -1,4 +1,3 @@
-import fse from 'fs-extra';
 import path from 'path';
 import { Nlp, dockStart } from '@nlpjs/basic';
 
@@ -33,8 +32,7 @@ async function getConfig() {
   const modelDir = path.join(__dirname, '..', 'lib');
 
   log(`[nlp] Corpus: ${corpusDir}`);
-
-  await fse.ensureDir(corpusDir);
+  log(`[nlp] Model: ${modelDir}`);
 
   return {
     settings: {

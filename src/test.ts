@@ -5,7 +5,7 @@ import assert from 'assert';
 import { Message } from './models';
 import { debug, log } from './logger';
 import { initNlp, process } from './nlp';
-import { getAnswer, getCache } from './bot';
+import { getAnswer, getCache, initSearch } from './bot';
 
 async function testQuestion(text: string) {
   const resp = await process(text);
@@ -134,6 +134,7 @@ async function testCache() {
 
 async function runTest() {
   await initNlp();
+  await initSearch();
 
   await testGreeting();
   await testIndex();

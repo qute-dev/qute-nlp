@@ -1,15 +1,23 @@
-import MeiliSearch from 'meilisearch';
+import { Document } from 'flexsearch';
 import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 import { debug, log } from '../logger';
 import { Message, Response } from '../models';
-import env from '../env';
 
 const { ar, id } = loadQuran();
-const { MEILI_ADDRESS, MEILI_KEY } = env;
 
-export async function getSearchAnswer(resp: Response): Promise<Message> {
-  debug('[BOT] getSearchAnswer');
+const quranId = new Document({
+  preset: 'score',
+  language: 'id',
+  worker: true,
+  document: {
+    id: 'id',
+    index: ['text'],
+  },
+});
+
+export async function searchQuran(resp: Response): Promise<Message> {
+  debug('[BOT] searchVerses');
 
   const answer: Message = {
     id: uuid(),
@@ -22,19 +30,13 @@ export async function getSearchAnswer(resp: Response): Promise<Message> {
     },
   };
 
-  // cari dulu di meili search engine
-  const client = new MeiliSearch({
-    host: MEILI_ADDRESS,
-    apiKey: MEILI_KEY,
-  });
+  // cari dulu di search engine
+  const results = await quranId.searchAsync(resp.utterance);
+  const result = results.length ? results[0].result : [];
 
-  const result = await client
-    .index('qute-verses_id')
-    .search(resp.utterance, { attributesToRetrieve: ['id'] });
-
-  result.hits.forEach((hit) => {
-    answer.data.verses.push(ar.verses.find((v) => v.id === hit.id));
-    answer.data.translations.push(id.verses.find((v) => v.id === hit.id));
+  result.forEach((sid) => {
+    answer.data.verses.push(ar.verses.find((v) => v.id === sid));
+    answer.data.translations.push(id.verses.find((v) => v.id === sid));
   });
 
   // ambil jawaban2 dari classification nlp
@@ -49,7 +51,7 @@ export async function getSearchAnswer(resp: Response): Promise<Message> {
     const verseId = parseInt(index[1]);
 
     // jika sudah ada, skip
-    if (result.hits.find((h) => h.id === verseId)) continue;
+    if (result.find((h) => h === verseId)) continue;
 
     answer.data.verses.push(ar.verses.find((v) => v.id === verseId));
     answer.data.translations.push(id.verses.find((v) => v.id === verseId));
@@ -59,22 +61,13 @@ export async function getSearchAnswer(resp: Response): Promise<Message> {
 }
 
 export async function initSearch() {
-  log(`[BOT] initSearch ${MEILI_ADDRESS}`);
+  // log(`[BOT] initSearch:index verses-ar`);
+  // for (const verse of ar.verses) {
+  //   await quranAr.addAsync(verse.id, verse);
+  // }
 
-  const client = new MeiliSearch({
-    host: MEILI_ADDRESS,
-    apiKey: MEILI_KEY,
-  });
-
-  let resp = await client
-    .index('qute-verses_ar')
-    .addDocuments(ar.verses, { primaryKey: 'id' });
-
-  log(`[BOT] initSearch:index verses-ar`, resp);
-
-  resp = await client
-    .index('qute-verses_id')
-    .addDocuments(id.verses, { primaryKey: 'id' });
-
-  log(`[BOT] initSearch:index verses-id`, resp);
+  log(`[BOT] initSearch:index verses-id`);
+  for (const verse of id.verses) {
+    await quranId.addAsync(verse.id, verse);
+  }
 }

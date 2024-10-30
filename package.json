@@ -1,8 +1,12 @@
 {
   "name": "qute-nlp",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "description": "QUTE NLP engine",
   "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./models": "./lib/models/index.js"
+  },
   "type": "commonjs",
   "scripts": {
     "build": "rimraf ./lib && tsc",
@@ -29,8 +33,8 @@
     "@nlpjs/basic": "^4.27.0",
     "@nlpjs/lang-id": "^4.26.1",
     "dotenv": "^16.4.5",
+    "flexsearch": "^0.7.43",
     "fs-extra": "^11.2.0",
-    "meilisearch": "^0.38.0",
     "node-nlp": "^4.27.0",
     "pino": "^8.21.0",
     "pino-pretty": "^11.3.0",
