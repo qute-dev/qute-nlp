@@ -8,11 +8,9 @@ import { log } from './logger';
 let nlp: Nlp;
 
 export async function initNlp() {
-  log('[nlp] Initializing NLP...');
+  log(`[nlp] Initializing NLP...`);
 
-  await fse.ensureDir('dist');
-
-  const config = await fse.readJson(path.join(__dirname, 'conf.json'));
+  const config = await getConfig();
   const dock = await dockStart(config);
 
   nlp = dock.get('nlp') as Nlp;
@@ -28,4 +26,29 @@ export async function process(text: string) {
 export async function train() {
   log('[nlp] Training NLP...');
   await nlp.train();
+}
+
+async function getConfig() {
+  const corpusDir = path.join(__dirname, '..', 'corpus');
+  const modelDir = path.join(__dirname, '..', 'lib');
+
+  log(`[nlp] Corpus: ${corpusDir}`);
+
+  await fse.ensureDir(corpusDir);
+
+  return {
+    settings: {
+      nlp: {
+        threshold: 0.9,
+        autoLoad: true,
+        autoSave: true,
+        modelFileName: path.join(modelDir, 'model.nlp'),
+        corpora: [
+          path.join(corpusDir, 'greeting.json'),
+          path.join(corpusDir, 'quran-id.json'),
+        ],
+      },
+    },
+    use: ['Basic', 'LangId'],
+  };
 }

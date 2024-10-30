@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node ./lib/index.js",
-    "build": "rimraf ./lib && tsc && cp ./src/conf.json ./lib/conf.json",
+    "build": "rimraf ./lib && tsc",
     "generate": "rimraf ./lib/model.nlp && ts-node ./src/generate.ts",
     "console": "cd console && node index.js",
     "test": "ts-node ./src/test.ts"
