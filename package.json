@@ -1,8 +1,9 @@
 {
   "name": "qute-nlp",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "QUTE NLP engine",
   "main": "lib/index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon",
     "start": "node ./lib/index.js",
