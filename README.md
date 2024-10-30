@@ -1,6 +1,6 @@
 # qute-nlp
 
-QUTE NLP API Service
+QUTE NLP engine.
 
 ## Try it!
 

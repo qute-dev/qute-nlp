@@ -4,7 +4,7 @@
       "threshold": 0.9,
       "autoLoad": true,
       "autoSave": true,
-      "modelFileName": "../dist/model.nlp",
+      "modelFileName": "../lib/model.nlp",
       "corpora": ["../corpus/greeting.json", "../corpus/quran-id.json"]
     }
   },
