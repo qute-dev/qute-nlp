@@ -1,8 +1,12 @@
 {
   "name": "qute-nlp",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "description": "QUTE NLP engine",
   "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./models": "./lib/models/index.js"
+  },
   "type": "commonjs",
   "scripts": {
     "build": "rimraf ./lib && tsc",
