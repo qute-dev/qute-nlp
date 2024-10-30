@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 import { Response, Message, PlatformType } from '../models';
-import { debug, log } from '../logger';
+import { debug } from '../logger';
 import { getGreeting } from './greeting';
 import { getSearchAnswer } from './search';
 import { getVerseRange, getVersesByIds } from './verse';
