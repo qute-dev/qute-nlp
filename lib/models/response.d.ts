@@ -52,3 +52,4 @@ export interface Response {
         vote: string;
     };
 }
+//# sourceMappingURL=response.d.ts.map

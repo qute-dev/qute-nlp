@@ -6,7 +6,7 @@ import { Message, Response } from '../models';
 import env from '../env';
 
 const { ar, id } = loadQuran();
-const { HOST, MEILI_ADDRESS, MEILI_KEY } = env;
+const { MEILI_ADDRESS, MEILI_KEY } = env;
 
 export async function getSearchAnswer(resp: Response): Promise<Message> {
   debug('[BOT] getSearchAnswer');
