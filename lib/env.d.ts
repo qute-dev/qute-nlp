@@ -7,3 +7,4 @@ export declare const env: {
     MEILI_KEY: string;
 };
 export default env;
+//# sourceMappingURL=env.d.ts.map

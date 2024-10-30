@@ -15,3 +15,4 @@ export interface Message {
         next?: boolean;
     };
 }
+//# sourceMappingURL=message.d.ts.map
