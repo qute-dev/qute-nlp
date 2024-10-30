@@ -1,13 +1,13 @@
 {
   "name": "qute-nlp",
-  "version": "0.8.1",
-  "description": "QUTE NLP API Service",
-  "main": "index.js",
+  "version": "0.9.0",
+  "description": "QUTE NLP engine",
+  "main": "lib/index.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "node ./dist/index.js",
-    "build": "rimraf ./dist && tsc && cp ./src/conf.json ./dist/conf.json",
-    "generate": "rimraf ./dist/model.nlp && ts-node ./src/generate.ts",
+    "start": "node ./lib/index.js",
+    "build": "rimraf ./lib && tsc && cp ./src/conf.json ./lib/conf.json",
+    "generate": "rimraf ./lib/model.nlp && ts-node ./src/generate.ts",
     "console": "cd console && node index.js",
     "test": "ts-node ./src/test.ts"
   },
