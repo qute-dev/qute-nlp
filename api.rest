@@ -12,16 +12,3 @@ Content-Type: application/json
     "user": "{{user}}",
     "text": "al fatihah"
 }
-
-### MEILI KEY
-POST http://127.0.0.1:7700/keys
-Authorization: Bearer 4gjBsp-x4tlTM38kdPAXenPySd7bMx-38pzr2StlPE
-Content-Type: application/json
-
-{
-    "name": "Admin",
-    "description": "Admin API key",
-    "actions": ["*"],
-    "indexes": ["*"],
-    "expiresAt": null
-}
