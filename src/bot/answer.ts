@@ -3,7 +3,7 @@ import { loadQuran } from 'qute-corpus';
 import { Response, Message, PlatformType } from '../models';
 import { debug } from '../logger';
 import { getGreeting } from './greeting';
-import { getSearchAnswer } from './search';
+import { searchQuran } from './search';
 import { getVerseRange, getVersesByIds } from './verse';
 
 const { meta } = loadQuran();
@@ -46,12 +46,12 @@ export async function getAnswer(
   else if (keywordsEntity.length) {
     records.delete(user);
     resp.utterance = keywordsEntity[0].sourceText.replace('cari', '').trim();
-    answer = await getSearchAnswer(resp);
+    answer = await searchQuran(resp);
   }
   // ga ada entity kedetek, berarti pencarian
   else if (!entities.length) {
     records.delete(user);
-    answer = await getSearchAnswer(resp);
+    answer = await searchQuran(resp);
   }
   // cari di entity2
   else {
