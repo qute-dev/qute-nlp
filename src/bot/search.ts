@@ -27,15 +27,26 @@ export async function searchQuran(query: string): Promise<Answer> {
     },
   };
 
-  const queries = [query, ...query.trim().split(' ')];
-  const results: number[] = [];
+  const queries = [...new Set([query, ...query.trim().split(' ')])];
+  let results: number[] = [];
 
-  for (const q of queries) {
-    const result = await quranId.searchAsync(q, { bool: 'or' });
-    results.push(...result[0].result.map((r) => r as number));
+  // debug(`[BOT] searchQuran:queries`, queries);
+
+  for (const keyword of queries) {
+    const keyResult = await quranId.searchAsync(keyword);
+
+    // debug(`[BOT] searchQuran:keywordResult`, keyResult);
+
+    const ayatsResult =
+      keyResult?.length && keyResult[0].result.map((r) => r as number);
+
+    results.push(...(ayatsResult || []));
   }
 
-  debug(`[BOT] searchQuran:result -> ${results?.length}`);
+  // jangan sampe dobel
+  results = [...new Set(results)];
+
+  debug(`[BOT] searchQuran:results -> ${results?.length}`);
 
   results.forEach((rid) => {
     answer.data.verses.push(ar.verses.find((v) => v.id === rid));

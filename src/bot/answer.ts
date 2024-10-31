@@ -40,7 +40,11 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   // ada entity keyword search
   else if (keywordsEntity.length) {
     records.delete(user);
-    const query = keywordsEntity[0].sourceText.replace('cari', '').trim();
+
+    const query = (resp.utterance || keywordsEntity[0]?.sourceText || '')
+      .replace('cari', '')
+      .trim();
+
     answer = await searchQuran(query);
   }
   // ga ada entity kedetek, berarti pencarian

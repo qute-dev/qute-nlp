@@ -28,8 +28,8 @@ export async function train() {
 }
 
 async function getConfig() {
-  const corpusDir = path.join(__dirname, '..', 'corpus');
-  const modelDir = path.join(__dirname, '..', 'lib');
+  const corpusDir = path.join(__dirname, '..', '..', 'corpus');
+  const modelDir = path.join(__dirname, '..', '..', 'lib');
 
   log(`[nlp] Corpus: ${corpusDir}`);
   log(`[nlp] Model: ${modelDir}`);

@@ -5,18 +5,18 @@ import assert from 'assert';
 import { Answer } from './models';
 import { debug, log } from './logger';
 import { initNlp, process } from './bot/nlp';
-import { getAnswer, getCache, initSearch } from './bot';
+import { getCache, getAnswer } from './bot/answer';
+import { initSearch } from './bot/search';
 
 async function testQuestion(text: string) {
   const resp = await process(text);
-  const answer = await getAnswer(resp);
+  const answer = await getAnswer(resp, 'TEST');
 
   log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
 
-  // debug(`[TEST] intent: ${resp.intent}`);
-  // debug('[TEST] entities:', resp.entities);
+  debug(`[TEST] intent: ${resp.intent}`);
+  debug('[TEST] entities:', resp.entities);
   // debug('[TEST] answer details:', answer.data?.translations);
-  // debug('[TEST] classifications:', resp.classifications);
 
   return answer;
 }
@@ -76,37 +76,41 @@ async function testIndex() {
 async function testSearch() {
   let answer: Answer;
 
-  // // dg cari
-  // answer = await testQuestion('cari manusia');
-  // assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // dg cari
+  answer = await testQuestion('cari manusia');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // // dg cari nama surat
-  // answer = await testQuestion('cari maryam');
-  // assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // dg cari nama surat
+  answer = await testQuestion('cari maryam');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // // jodoh
-  // answer = await testQuestion('jodoh');
-  // assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // cari kata cari
+  answer = await testQuestion('cari mencari');
+  assert(!answer.data.chapter && answer.data.verses.length > 0);
 
-  // // dg cari jodoh
-  // answer = await testQuestion('cari jodoh');
-  // assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // jodoh
+  answer = await testQuestion('jodoh');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
 
-  // TODO: cari di surat tertentu
-  // answer = await testQuestion('cari allah di al baqarah');
-  // assert(answer.data.chapter && answer.data.verses.length > 1);
+  // dg cari jodoh
+  answer = await testQuestion('cari jodoh');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
 
   // tanpa kata cari
   answer = await testQuestion('surga neraka');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // // next hasil cari
-  // answer = await testQuestion('next');
-  // assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // next hasil cari
+  answer = await testQuestion('next');
+  assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // // cari yg ga ada
-  // answer = await testQuestion('pacul');
-  // assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // cari yg ga ada
+  answer = await testQuestion('pacul');
+  assert(!answer.data.chapter && answer.data.verses.length === 0);
+
+  // TODO: cari di surat tertentu
+  // answer = await testQuestion('cari allah di al baqarah');
+  // assert(answer.data.chapter && answer.data.verses.length > 1);
 }
 
 async function testCache() {
@@ -119,7 +123,7 @@ async function testCache() {
 
   // cek cache
   cache = await getCache();
-  assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10);
+  assert(cache['TEST'].length === answer.data.chapter.verses - 10);
 
   for (let i = 2; i <= 5; i++) {
     // lanjut
@@ -128,7 +132,7 @@ async function testCache() {
 
     // cek cache lagi
     cache = await getCache();
-    assert(cache['UNKNOWN'].length === answer.data.chapter.verses - 10 * i);
+    assert(cache['TEST'].length === answer.data.chapter.verses - 10 * i);
   }
 }
 
@@ -136,10 +140,10 @@ async function runTest() {
   await initNlp();
   await initSearch();
 
-  // await testGreeting();
-  // await testIndex();
+  await testGreeting();
+  await testIndex();
   await testSearch();
-  // await testCache();
+  await testCache();
 }
 
 runTest();
