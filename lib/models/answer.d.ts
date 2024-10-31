@@ -1,10 +1,7 @@
 import { Chapter, Verse } from 'qute-corpus';
-import { PlatformType, SourceType, ActionType } from './types';
-export interface Message {
-    id?: string;
-    time?: number;
-    platform?: PlatformType;
-    from?: 'me' | 'bot' | string;
+export type ActionType = 'search' | 'index' | 'next' | 'greeting' | 'none';
+export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
+export interface Answer {
     source?: SourceType;
     action?: ActionType;
     text?: string;
@@ -15,4 +12,4 @@ export interface Message {
         next?: boolean;
     };
 }
-//# sourceMappingURL=message.d.ts.map
+//# sourceMappingURL=answer.d.ts.map

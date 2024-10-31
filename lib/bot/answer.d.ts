@@ -1,4 +1,4 @@
-import { Response, Message, PlatformType } from '../models';
+import { Response, Answer } from '../models';
 export declare function getCache(): any;
-export declare function getAnswer(resp: Response, user?: string, platform?: PlatformType): Promise<Message>;
+export declare function getAnswer(resp: Response, user: string): Promise<Answer>;
 //# sourceMappingURL=answer.d.ts.map

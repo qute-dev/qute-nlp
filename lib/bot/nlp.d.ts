@@ -1,4 +1,4 @@
-import { Response } from './models';
+import { Response } from '../models';
 export declare function initNlp(): Promise<void>;
 export declare function process(text: string): Promise<Response>;
 export declare function train(): Promise<void>;
