@@ -4,12 +4,12 @@ import assert from 'assert';
 
 import { Answer } from './models';
 import { debug, log } from './logger';
-import { initNlp, process } from './bot/nlp';
+import { initNlp, process as processAnswer } from './bot/nlp';
 import { getCache, getAnswer } from './bot/answer';
 import { initSearch } from './bot/search';
 
 async function testQuestion(text: string) {
-  const resp = await process(text);
+  const resp = await processAnswer(text);
   const answer = await getAnswer(resp, 'TEST');
 
   log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
@@ -144,6 +144,8 @@ async function runTest() {
   await testIndex();
   await testSearch();
   await testCache();
+
+  process.exit(0);
 }
 
 runTest();
