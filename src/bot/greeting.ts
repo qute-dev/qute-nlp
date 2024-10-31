@@ -2,7 +2,7 @@ import { debug } from '../logger';
 import { Response, Answer } from '../models';
 
 export function getGreeting(resp: Response): Answer {
-  debug('[BOT] getGreeting', resp.intent);
+  debug('[BOT] getGreeting', { intent: resp.intent });
 
   return {
     source: 'other',
