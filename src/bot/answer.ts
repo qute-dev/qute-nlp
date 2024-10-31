@@ -32,6 +32,8 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   if (intent.startsWith('greeting')) {
     records.delete(user);
     answer = getGreeting(resp);
+
+    return answer;
   }
   // lanjut sesuai record
   else if (intent === 'next') {
