@@ -1,6 +1,6 @@
 {
   "name": "qute-nlp",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "QUTE NLP engine",
   "main": "lib/index.js",
   "exports": {
@@ -38,7 +38,6 @@
     "node-nlp": "^4.27.0",
     "pino": "^8.21.0",
     "pino-pretty": "^11.3.0",
-    "qute-corpus": "github:qute-dev/qute-corpus",
-    "uuid": "^9.0.1"
+    "qute-corpus": "github:qute-dev/qute-corpus"
   }
 }

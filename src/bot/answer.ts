@@ -1,6 +1,5 @@
-import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
-import { Response, Message, PlatformType } from '../models';
+import { Response, Answer } from '../models';
 import { debug } from '../logger';
 import { getGreeting } from './greeting';
 import { searchQuran } from './search';
@@ -20,14 +19,10 @@ export function getCache() {
   return cache;
 }
 
-export async function getAnswer(
-  resp: Response,
-  user = 'UNKNOWN',
-  platform: PlatformType = 'web'
-): Promise<Message> {
+export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   const { intent, entities } = resp;
 
-  let answer: Message = {};
+  let answer: Answer = {};
 
   const keywordsEntity = entities.filter(
     (e) => e.entity === 'keywords' && e.accuracy >= 0.1
@@ -45,22 +40,23 @@ export async function getAnswer(
   // ada entity keyword search
   else if (keywordsEntity.length) {
     records.delete(user);
-    resp.utterance = keywordsEntity[0].sourceText.replace('cari', '').trim();
-    answer = await searchQuran(resp);
+
+    const query = (resp.utterance || keywordsEntity[0]?.sourceText || '')
+      .replace('cari', '')
+      .trim();
+
+    answer = await searchQuran(query);
   }
   // ga ada entity kedetek, berarti pencarian
   else if (!entities.length) {
     records.delete(user);
-    answer = await searchQuran(resp);
+    answer = await searchQuran(resp.utterance);
   }
   // cari di entity2
   else {
     records.delete(user);
     answer = getEntityAnswer(entities);
   }
-
-  answer.from = 'bot';
-  answer.platform = platform;
 
   if (answer.data?.verses?.length > 10) {
     answer.data.next = true;
@@ -89,15 +85,13 @@ export async function getAnswer(
   return answer;
 }
 
-function getNextAnswer(user: string): Message {
+function getNextAnswer(user: string): Answer {
   debug('[BOT] getNextAnswer', user);
 
   const lasts = records.get(user);
 
   if (!lasts || !lasts.length) {
     return {
-      id: uuid(),
-      time: Date.now(),
       source: 'cache',
       action: 'none',
       text: 'Data tidak ditemukan',
@@ -107,7 +101,7 @@ function getNextAnswer(user: string): Message {
   return getVersesByIds(lasts);
 }
 
-function getEntityAnswer(entities: any[]): Message {
+function getEntityAnswer(entities: any[]): Answer {
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
   );

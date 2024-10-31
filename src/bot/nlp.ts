@@ -1,8 +1,8 @@
 import path from 'path';
 import { Nlp, dockStart } from '@nlpjs/basic';
 
-import { Response } from './models';
-import { log } from './logger';
+import { Response } from '../models';
+import { log } from '../logger';
 
 let nlp: Nlp;
 
@@ -28,8 +28,8 @@ export async function train() {
 }
 
 async function getConfig() {
-  const corpusDir = path.join(__dirname, '..', 'corpus');
-  const modelDir = path.join(__dirname, '..', 'lib');
+  const corpusDir = path.join(__dirname, '..', '..', 'corpus');
+  const modelDir = path.join(__dirname, '..', '..', 'lib');
 
   log(`[nlp] Corpus: ${corpusDir}`);
   log(`[nlp] Model: ${modelDir}`);

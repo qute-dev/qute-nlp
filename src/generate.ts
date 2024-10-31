@@ -4,7 +4,7 @@ import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
 
 import { log } from './logger';
-import { initNlp } from './nlp';
+import { initNlp } from './bot';
 import { initSearch } from './bot';
 
 async function buildEntities(meta: Meta) {
