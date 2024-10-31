@@ -1,8 +1,7 @@
-import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 
 import { debug } from '../logger';
-import { Message } from '../models';
+import { Answer } from '../models';
 
 const { ar, id, meta } = loadQuran();
 
@@ -10,7 +9,7 @@ export function getVerseRange(
   chapterNo: number,
   verseStart: number,
   verseEnd: number
-): Message {
+): Answer {
   debug('[BOT] getVerses', { chapterNo, verseStart, verseEnd });
 
   const chapter = id.chapters[chapterNo - 1];
@@ -26,8 +25,6 @@ export function getVerseRange(
   );
 
   return {
-    id: uuid(),
-    time: Date.now(),
     source: 'quran',
     action: 'index',
     data: {
@@ -39,10 +36,8 @@ export function getVerseRange(
   };
 }
 
-export function getVersesByIds(verseIds: number[]): Message {
-  const answer: Message = {
-    id: uuid(),
-    time: Date.now(),
+export function getVersesByIds(verseIds: number[]): Answer {
+  const answer: Answer = {
     source: 'quran',
     action: 'index',
     data: {

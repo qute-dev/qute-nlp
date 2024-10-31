@@ -1,8 +1,7 @@
 import { Document } from 'flexsearch';
-import { v4 as uuid } from 'uuid';
 import { loadQuran } from 'qute-corpus';
 import { debug, log } from '../logger';
-import { Message, Response } from '../models';
+import { Answer } from '../models';
 
 const { ar, id } = loadQuran();
 
@@ -16,12 +15,10 @@ const quranId = new Document({
   },
 });
 
-export async function searchQuran(resp: Response): Promise<Message> {
-  debug('[BOT] searchVerses');
+export async function searchQuran(query: string): Promise<Answer> {
+  debug(`[BOT] searchQuran: ${query}`);
 
-  const answer: Message = {
-    id: uuid(),
-    time: Date.now(),
+  const answer: Answer = {
     source: 'quran',
     action: 'search',
     data: {
@@ -30,37 +27,26 @@ export async function searchQuran(resp: Response): Promise<Message> {
     },
   };
 
-  // cari dulu di search engine
-  const results = await quranId.searchAsync(resp.utterance);
-  const result = results.length ? results[0].result : [];
+  const queries = [query, ...query.trim().split(' ')];
+  const results: number[] = [];
 
-  result.forEach((sid) => {
-    answer.data.verses.push(ar.verses.find((v) => v.id === sid));
-    answer.data.translations.push(id.verses.find((v) => v.id === sid));
-  });
-
-  // ambil jawaban2 dari classification nlp
-  const answers = resp.classifications
-    .filter((c) => c.score > 0)
-    .sort((c1, c2) => (c1.score > c2.score ? 1 : -1));
-
-  for (const alt of answers) {
-    if (!alt.intent.startsWith('verse_')) continue;
-
-    const index = alt.intent.split('verse_');
-    const verseId = parseInt(index[1]);
-
-    // jika sudah ada, skip
-    if (result.find((h) => h === verseId)) continue;
-
-    answer.data.verses.push(ar.verses.find((v) => v.id === verseId));
-    answer.data.translations.push(id.verses.find((v) => v.id === verseId));
+  for (const q of queries) {
+    const result = await quranId.searchAsync(q, { bool: 'or' });
+    results.push(...result[0].result.map((r) => r as number));
   }
+
+  debug(`[BOT] searchQuran:result -> ${results?.length}`);
+
+  results.forEach((rid) => {
+    answer.data.verses.push(ar.verses.find((v) => v.id === rid));
+    answer.data.translations.push(id.verses.find((v) => v.id === rid));
+  });
 
   return answer;
 }
 
 export async function initSearch() {
+  // TODO: search arabic
   // log(`[BOT] initSearch:index verses-ar`);
   // for (const verse of ar.verses) {
   //   await quranAr.addAsync(verse.id, verse);

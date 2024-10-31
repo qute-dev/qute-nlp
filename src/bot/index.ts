@@ -1,2 +1,3 @@
 export * from './answer';
-export { initSearch } from './search';
+export * from './search';
+export * from './verse';
