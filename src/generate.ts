@@ -4,8 +4,7 @@ import fse from 'fs-extra';
 import { Meta, Quran, loadQuran } from 'qute-corpus';
 
 import { log } from './logger';
-import { initNlp } from './bot';
-import { initSearch } from './bot';
+import { initNlp, initSearch } from './bot';
 
 async function buildEntities(meta: Meta) {
   log('Building entities...');
@@ -47,14 +46,15 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   // const stemmer = new StemmerId();
   // stemmer.stopwords = new StopwordsId();
 
+  // TODO: ini diskip dulu saja, pakai search engine
   // intent berdasar ayat & tokennya
-  for (const v of corpus.id.verses) {
-    // const token = stemmer.tokenizeAndStem(v.text);
-    const utterances = [v.text.replace(/[^a-zA-Z ]/gi, ' ').toLowerCase()];
-    const answers = [`${v.id}`];
+  // for (const v of corpus.id.verses) {
+  //   // const token = stemmer.tokenizeAndStem(v.text);
+  //   const utterances = [v.text.replace(/[^a-zA-Z ]/gi, ' ').toLowerCase()];
+  //   const answers = [`${v.id}`];
 
-    data.push({ intent: `verse_${v.id}`, utterances, answers });
-  }
+  //   data.push({ intent: `verse_${v.id}`, utterances, answers });
+  // }
 
   // intent buat cari2 entity
   data.push({
@@ -134,6 +134,10 @@ async function build() {
 
   log('Building search index...');
   await initSearch();
+
+  log('Corpus generated!');
+
+  process.exit(0);
 }
 
 build();
