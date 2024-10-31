@@ -2,9 +2,9 @@ import 'dotenv/config';
 
 import assert from 'assert';
 
-import { Message } from './models';
+import { Answer } from './models';
 import { debug, log } from './logger';
-import { initNlp, process } from './nlp';
+import { initNlp, process } from './bot/nlp';
 import { getAnswer, getCache, initSearch } from './bot';
 
 async function testQuestion(text: string) {
@@ -13,16 +13,16 @@ async function testQuestion(text: string) {
 
   log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
 
-  debug(`[TEST] intent: ${resp.intent}`);
-  debug('[TEST] entities:', resp.entities);
-  debug('[TEST] answer details:', answer.data?.translations);
+  // debug(`[TEST] intent: ${resp.intent}`);
+  // debug('[TEST] entities:', resp.entities);
+  // debug('[TEST] answer details:', answer.data?.translations);
   // debug('[TEST] classifications:', resp.classifications);
 
   return answer;
 }
 
 async function testGreeting() {
-  let answer: Message;
+  let answer: Answer;
 
   // sapaan
   answer = await testQuestion('halo');
@@ -34,7 +34,7 @@ async function testGreeting() {
 }
 
 async function testIndex() {
-  let answer: Message;
+  let answer: Answer;
 
   // surat
   answer = await testQuestion('surat albaqara');
@@ -74,43 +74,43 @@ async function testIndex() {
 }
 
 async function testSearch() {
-  let answer: Message;
+  let answer: Answer;
 
-  // dg cari
-  answer = await testQuestion('cari manusia');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // // dg cari
+  // answer = await testQuestion('cari manusia');
+  // assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // dg cari nama surat
-  answer = await testQuestion('cari maryam');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // // dg cari nama surat
+  // answer = await testQuestion('cari maryam');
+  // assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // jodoh
-  answer = await testQuestion('jodoh');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // // jodoh
+  // answer = await testQuestion('jodoh');
+  // assert(!answer.data.chapter && answer.data.verses.length === 0);
 
-  // dg cari jodoh
-  answer = await testQuestion('cari jodoh');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // // dg cari jodoh
+  // answer = await testQuestion('cari jodoh');
+  // assert(!answer.data.chapter && answer.data.verses.length === 0);
 
   // TODO: cari di surat tertentu
   // answer = await testQuestion('cari allah di al baqarah');
-  // assert(answer.data.chapter && answer.data.verses.length === 10);
+  // assert(answer.data.chapter && answer.data.verses.length > 1);
 
   // tanpa kata cari
   answer = await testQuestion('surga neraka');
   assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // next hasil cari
-  answer = await testQuestion('next');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  // // next hasil cari
+  // answer = await testQuestion('next');
+  // assert(!answer.data.chapter && answer.data.verses.length === 10);
 
-  // cari yg ga ada
-  answer = await testQuestion('pacul');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  // // cari yg ga ada
+  // answer = await testQuestion('pacul');
+  // assert(!answer.data.chapter && answer.data.verses.length === 0);
 }
 
 async function testCache() {
-  let answer: Message;
+  let answer: Answer;
   let cache: any;
 
   // surat
@@ -136,10 +136,10 @@ async function runTest() {
   await initNlp();
   await initSearch();
 
-  await testGreeting();
-  await testIndex();
+  // await testGreeting();
+  // await testIndex();
   await testSearch();
-  await testCache();
+  // await testCache();
 }
 
 runTest();

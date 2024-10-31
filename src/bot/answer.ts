@@ -19,10 +19,7 @@ export function getCache() {
   return cache;
 }
 
-export async function getAnswer(
-  resp: Response,
-  user = 'UNKNOWN'
-): Promise<Answer> {
+export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   const { intent, entities } = resp;
 
   let answer: Answer = {};

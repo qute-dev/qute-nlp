@@ -1,8 +1,8 @@
 import path from 'path';
 import { Nlp, dockStart } from '@nlpjs/basic';
 
-import { Response } from './models';
-import { log } from './logger';
+import { Response } from '../models';
+import { log } from '../logger';
 
 let nlp: Nlp;
 
