@@ -63,8 +63,11 @@ export async function initSearch() {
   //   await quranAr.addAsync(verse.id, verse);
   // }
 
-  log(`[BOT] initSearch:index verses-id`);
+  log(`[BOT] initSearch:index verses-id...`);
+
   for (const verse of id.verses) {
     await quranId.addAsync(verse.id, verse);
   }
+
+  log(`[BOT] initSearch done`);
 }
