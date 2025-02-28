@@ -42,11 +42,19 @@ async function testIndex() {
 
   // surat simple
   answer = await testQuestion('baqara');
-  assert(answer.data.chapter.id === 2);
+  assert(
+    answer.data.chapter.id === 2 &&
+      answer.data.verses.length === 10 &&
+      answer.data.translations.length === 10
+  );
 
   // lanjut
   answer = await testQuestion('lanjut');
-  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
+  assert(
+    answer.data.chapter.id === 2 &&
+      answer.data.verses.length === 10 &&
+      answer.data.translations.length === 10
+  );
 
   // ayat lengkap
   answer = await testQuestion('surat alfatihah ayat 5');

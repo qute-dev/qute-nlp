@@ -65,7 +65,7 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
 
     // 10 terakhir
     const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
-    answer.data.translations.splice(10, answer.data.verses.length - 10);
+    answer.data.translations.splice(10, answer.data.translations.length - 10);
 
     debug(`[BOT] nexts ${nexts.length}`);
 
