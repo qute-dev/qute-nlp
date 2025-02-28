@@ -16,6 +16,7 @@ export async function initNlp() {
 
   log('[nlp] Load or train NLP...');
   await nlp.loadOrTrain();
+  log('[nlp] NLP loaded...');
 }
 
 export async function process(text: string) {
@@ -25,6 +26,7 @@ export async function process(text: string) {
 export async function train() {
   log('[nlp] Training NLP...');
   await nlp.train();
+  log('[nlp] NLP trained...');
 }
 
 async function getConfig() {
