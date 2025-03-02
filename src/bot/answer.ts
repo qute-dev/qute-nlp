@@ -62,7 +62,7 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   // cari di entity2
   else {
     records.delete(user);
-    answer = getEntityAnswer(entities);
+    answer = getEntityAnswer(entities, intent);
   }
 
   if (answer.data?.verses?.length > 10) {
@@ -108,7 +108,7 @@ function getNextAnswer(user: string): Answer {
   return getVersesByIds(lasts);
 }
 
-function getEntityAnswer(entities: any[]): Answer {
+function getEntityAnswer(entities: any[], intent: string): Answer {
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
   );
@@ -169,5 +169,10 @@ function getEntityAnswer(entities: any[]): Answer {
     verseEnd = meta.chapters[chapter - 1]?.verses;
   }
 
-  return getVerseRange(chapter, verseStart, verseEnd || verseStart);
+  return getVerseRange(
+    chapter,
+    verseStart,
+    verseEnd || verseStart,
+    intent === 'audio' ? 'audio' : 'index'
+  );
 }
