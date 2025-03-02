@@ -1,4 +1,5 @@
 export { getAnswer, getCache } from './answer';
+export { getRandomVerse } from './verse';
 export { initSearch } from './search';
 export { initNlp } from './nlp';
 
