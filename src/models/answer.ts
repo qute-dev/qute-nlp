@@ -6,9 +6,10 @@ export type ActionType =
   | 'next'
   | 'greeting'
   | 'random'
+  | 'audio'
   | 'none';
 
-export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
+export type SourceType = 'quran' | 'tafsir' | 'cache' | 'audio' | 'other';
 
 export interface Answer {
   source?: SourceType;
