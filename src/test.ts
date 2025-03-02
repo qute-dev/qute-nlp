@@ -163,6 +163,19 @@ async function testRandom() {
   assert(!!answer.text || answer.data?.translations.length == 1);
 }
 
+async function testAudio() {
+  let answer: Answer;
+
+  answer = await testQuestion('putar audio surat albaqara');
+  assert(answer.action === 'audio' && answer.data.audios.length === 1);
+
+  answer = await testQuestion('audio surat 1 ayat 1-3');
+  assert(answer.action === 'audio' && answer.data.audios.length === 3);
+
+  answer = await testQuestion('audio surat an naas');
+  assert(answer.action === 'audio' && answer.data.audios.length === 1);
+}
+
 async function runTest() {
   await initNlp();
   await initSearch();
@@ -172,6 +185,7 @@ async function runTest() {
   await testSearch();
   await testCache();
   await testRandom();
+  await testAudio();
 
   process.exit(0);
 }

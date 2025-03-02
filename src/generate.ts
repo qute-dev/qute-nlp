@@ -102,6 +102,25 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
     ],
   });
 
+  // intent for audio
+  data.push({
+    intent: 'audio',
+    utterances: [
+      'audio surat @chapter',
+      'audio surat @chapter_no',
+      'audio surat @chapter ayat @verse_no',
+      'audio surat @chapter_no ayat @verse_no',
+      'audio @chapter @verse_no',
+      'audio @chapter_no @verse_no',
+    ],
+    actions: [
+      {
+        name: 'getAudio',
+        parameters: ['@chapter', '@chapter_no', '@verse_no'],
+      },
+    ],
+  });
+
   // perintah cari
   data.push({
     intent: 'search',
