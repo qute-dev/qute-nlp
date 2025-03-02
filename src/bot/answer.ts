@@ -3,7 +3,7 @@ import { Response, Answer } from '../models';
 import { debug } from '../logger';
 import { getGreeting } from './greeting';
 import { searchQuran } from './search';
-import { getVerseRange, getVersesByIds } from './verse';
+import { getRandomVerse, getVerseRange, getVersesByIds } from './verse';
 
 const { meta } = loadQuran();
 
@@ -38,6 +38,11 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   // lanjut sesuai record
   else if (intent === 'next') {
     answer = getNextAnswer(user);
+  }
+  // handle random ayat
+  else if (intent === 'random') {
+    records.delete(user);
+    answer = getRandomVerse();
   }
   // ada entity keyword search
   else if (keywordsEntity.length) {

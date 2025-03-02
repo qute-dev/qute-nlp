@@ -114,6 +114,12 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
     utterances: ['lanjut', 'next'],
   });
 
+  // perintah cari random ayat
+  data.push({
+    intent: 'random',
+    utterances: ['acak', 'random', 'random ayat', 'ayat random', 'ayat acak'],
+  });
+
   return data;
 }
 
