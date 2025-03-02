@@ -19,6 +19,7 @@ export interface Answer {
     chapter?: Chapter;
     verses?: Verse[];
     translations?: Verse[];
+    audios?: string[];
     next?: boolean;
   };
 }
