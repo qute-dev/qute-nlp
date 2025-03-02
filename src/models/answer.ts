@@ -3,13 +3,13 @@ import { Chapter, Verse } from 'qute-corpus';
 export type ActionType =
   | 'search'
   | 'index'
-  | 'next'
-  | 'greeting'
   | 'random'
   | 'audio'
+  | 'greeting'
+  | 'next'
   | 'none';
 
-export type SourceType = 'quran' | 'tafsir' | 'cache' | 'audio' | 'other';
+export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
 
 export interface Answer {
   source?: SourceType;
