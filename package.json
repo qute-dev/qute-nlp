@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rimraf ./lib && tsc",
     "generate": "rimraf ./lib/model.nlp && tsx ./src/generate.ts",
-    "console": "cd console && node index.js",
+    "console": "tsx ./src/console.ts",
     "test": "tsx ./src/test.ts"
   },
   "author": "QUTE",
@@ -38,6 +38,7 @@
     "node-nlp": "^4.27.0",
     "pino": "^8.21.0",
     "pino-pretty": "^11.3.0",
-    "qute-corpus": "github:qute-dev/qute-corpus"
+    "qute-corpus": "github:qute-dev/qute-corpus",
+    "readline-sync": "^1.4.10"
   }
 }
