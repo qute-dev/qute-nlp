@@ -64,3 +64,20 @@ export function getVersesByIds(verseIds: number[]): Answer {
 
   return answer;
 }
+
+export function getRandomVerse(): Answer {
+  const randomIndex = Math.floor(Math.random() * ar.verses.length);
+  const verse = ar.verses[randomIndex];
+  const translation = id.verses[randomIndex];
+
+  return {
+    source: 'quran',
+    action: 'random',
+    data: {
+      chapter: id.chapters[verse.chapter - 1],
+      verses: [verse],
+      translations: [translation],
+      next: false,
+    },
+  };
+}
