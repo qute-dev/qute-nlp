@@ -144,6 +144,25 @@ async function testCache() {
   }
 }
 
+async function testRandom() {
+  let answer: Answer;
+
+  answer = await testQuestion('random');
+  assert(!!answer.text || answer.data?.translations.length == 1);
+
+  answer = await testQuestion('random ayat');
+  assert(!!answer.text || answer.data?.translations.length == 1);
+
+  answer = await testQuestion('ayat random');
+  assert(!!answer.text || answer.data?.translations.length == 1);
+
+  answer = await testQuestion('ayat acak');
+  assert(!!answer.text || answer.data?.translations.length == 1);
+
+  answer = await testQuestion('minta ayat acak');
+  assert(!!answer.text || answer.data?.translations.length == 1);
+}
+
 async function runTest() {
   await initNlp();
   await initSearch();
@@ -152,6 +171,7 @@ async function runTest() {
   await testIndex();
   await testSearch();
   await testCache();
+  await testRandom();
 
   process.exit(0);
 }
