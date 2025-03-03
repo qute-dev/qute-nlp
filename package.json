@@ -1,6 +1,6 @@
 {
   "name": "qute-nlp",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "QUTE NLP engine",
   "main": "lib/index.js",
   "exports": {

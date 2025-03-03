@@ -39,6 +39,7 @@ export function getVerseRange(
   );
 
   let audios: string[];
+
   if (verseStart === 1 && verseEnd === meta.chapters[chapterNo - 1].verses) {
     audios = [formatChapterAudioLink(chapterNo)];
   } else {
