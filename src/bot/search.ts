@@ -4,7 +4,7 @@ import { debug, log } from '../logger';
 import { Answer } from '../models';
 import { formatAudioLink } from './utils';
 
-const { ar, id } = loadQuran();
+const { ar, id, tafsirs } = loadQuran();
 
 const quranId = new Document({
   preset: 'score',
@@ -26,6 +26,7 @@ export async function searchQuran(query: string): Promise<Answer> {
       verses: [],
       translations: [],
       audios: [],
+      tafsirs: [],
     },
   };
 
@@ -53,6 +54,7 @@ export async function searchQuran(query: string): Promise<Answer> {
   results.forEach((rid) => {
     answer.data.verses.push(ar.verses.find((v) => v.id === rid));
     answer.data.translations.push(id.verses.find((v) => v.id === rid));
+    answer.data.tafsirs.push(tafsirs[0].verses.find((v) => v.id === rid));
   });
 
   answer.data.audios = answer.data.verses.map((verse) =>
