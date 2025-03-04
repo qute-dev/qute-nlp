@@ -1,5 +1,5 @@
 import { loadQuran } from 'qute-corpus';
-import { Response, Answer } from '../models';
+import { Response, Answer, ActionType } from '../models';
 import { debug } from '../logger';
 import { getGreeting } from './greeting';
 import { searchQuran } from './search';
@@ -44,6 +44,11 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     records.delete(user);
     answer = getRandomVerse();
   }
+  // handle tafsir intent
+  else if (intent === 'tafsir') {
+    records.delete(user);
+    answer = getEntityAnswer(entities, intent);
+  }
   // ada entity keyword search
   else if (keywordsEntity.length) {
     records.delete(user);
@@ -72,6 +77,7 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
     answer.data.translations.splice(10, answer.data.translations.length - 10);
     answer.data.audios.splice(10, answer.data.audios.length - 10);
+    answer.data.tafsirs.splice(10, answer.data.tafsirs.length - 10);
 
     debug(`[BOT] nexts ${nexts.length}`);
 
@@ -174,6 +180,6 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     chapter,
     verseStart,
     verseEnd || verseStart,
-    intent === 'audio' ? 'audio' : 'index'
+    intent as ActionType
   );
 }

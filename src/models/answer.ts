@@ -1,9 +1,10 @@
-import { Chapter, Verse } from 'qute-corpus';
+import { Chapter, TafsirVerse, Verse } from 'qute-corpus';
 
 export type ActionType =
   | 'search'
   | 'index'
   | 'random'
+  | 'tafsir'
   | 'audio'
   | 'greeting'
   | 'next'
@@ -19,6 +20,7 @@ export interface Answer {
     chapter?: Chapter;
     verses?: Verse[];
     translations?: Verse[];
+    tafsirs?: TafsirVerse[];
     audios?: string[];
     next?: boolean;
   };
