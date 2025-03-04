@@ -4,6 +4,7 @@ export type ActionType =
   | 'search'
   | 'index'
   | 'random'
+  | 'tafsir'
   | 'audio'
   | 'greeting'
   | 'next'

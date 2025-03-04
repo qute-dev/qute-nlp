@@ -163,6 +163,53 @@ async function testRandom() {
   assert(!!answer.text || answer.data?.translations.length == 1);
 }
 
+async function testTafsir() {
+  let answer: Answer;
+
+  // tafsir for specific chapter by name
+  answer = await testQuestion('tafsir surat albaqara');
+  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+
+  // tafsir for specific chapter by number
+  answer = await testQuestion('tafsir surat 2');
+  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+
+  // tafsir for specific verse in chapter by name
+  answer = await testQuestion('tafsir surat albaqara ayat 1');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+
+  // tafsir for specific verse in chapter by number
+  answer = await testQuestion('tafsir surat 2 ayat 1');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+
+  // tafsir for verse range in chapter by name
+  answer = await testQuestion('tafsir surat albaqara ayat 1-5');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+
+  // tafsir for verse range in chapter by number
+  answer = await testQuestion('tafsir surat 2 ayat 1-5');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+
+  // additional tests without 'surat' and 'ayat' keywords
+  answer = await testQuestion('tafsir albaqara');
+  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+
+  answer = await testQuestion('tafsir 2');
+  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+
+  answer = await testQuestion('tafsir albaqara 1');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+
+  answer = await testQuestion('tafsir 2 1');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+
+  answer = await testQuestion('tafsir albaqara 1-5');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+
+  answer = await testQuestion('tafsir 2 1-5');
+  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+}
+
 async function testAudio() {
   let answer: Answer;
 
@@ -185,6 +232,7 @@ async function runTest() {
   await testSearch();
   await testCache();
   await testRandom();
+  await testTafsir();
   await testAudio();
 
   process.exit(0);
