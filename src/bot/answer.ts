@@ -8,6 +8,7 @@ import { getRandomVerse, getVerseRange, getVersesByIds } from './verse';
 const { meta } = loadQuran();
 
 const records = new Map<string, number[]>(); // user => [verseId]
+const MAX_RESULT = 7;
 
 export function getCache() {
   const cache = {} as any;
@@ -70,14 +71,20 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     answer = getEntityAnswer(entities, intent);
   }
 
-  if (answer.data?.verses?.length > 10) {
+  if (answer.data?.verses?.length > MAX_RESULT) {
     answer.data.next = true;
 
-    // 10 terakhir
-    const nexts = answer.data.verses.splice(10, answer.data.verses.length - 10);
-    answer.data.translations.splice(10, answer.data.translations.length - 10);
-    answer.data.audios.splice(10, answer.data.audios.length - 10);
-    answer.data.tafsirs.splice(10, answer.data.tafsirs.length - 10);
+    const { data } = answer;
+
+    // MAX_RESULT terakhir
+    const nexts = data.verses.splice(
+      MAX_RESULT,
+      data.verses.length - MAX_RESULT
+    );
+
+    data.translations.splice(MAX_RESULT, data.translations.length - MAX_RESULT);
+    data.audios.splice(MAX_RESULT, data.audios.length - MAX_RESULT);
+    data.tafsirs.splice(MAX_RESULT, data.tafsirs.length - MAX_RESULT);
 
     debug(`[BOT] nexts ${nexts.length}`);
 
@@ -86,7 +93,7 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
 
     records.set(user, verseIds);
   } else if (answer.data) {
-    // jawaban kurang dari 10, ga perlu next
+    // jawaban kurang dari MAX_RESULT, ga perlu next
     answer.data.next = false;
     records.delete(user);
   }
