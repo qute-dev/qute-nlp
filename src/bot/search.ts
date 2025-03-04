@@ -2,6 +2,7 @@ import { Document } from 'flexsearch';
 import { loadQuran } from 'qute-corpus';
 import { debug, log } from '../logger';
 import { Answer } from '../models';
+import { formatAudioLink } from './utils';
 
 const { ar, id } = loadQuran();
 
@@ -24,6 +25,7 @@ export async function searchQuran(query: string): Promise<Answer> {
     data: {
       verses: [],
       translations: [],
+      audios: [],
     },
   };
 
@@ -52,6 +54,10 @@ export async function searchQuran(query: string): Promise<Answer> {
     answer.data.verses.push(ar.verses.find((v) => v.id === rid));
     answer.data.translations.push(id.verses.find((v) => v.id === rid));
   });
+
+  answer.data.audios = answer.data.verses.map((verse) =>
+    formatAudioLink(verse.chapter, verse.verse)
+  );
 
   return answer;
 }
