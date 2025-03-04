@@ -1,10 +1,10 @@
-import { loadQuran } from 'qute-corpus';
+import { loadQuran, Verse, TafsirVerse } from 'qute-corpus';
 
 import { debug } from '../logger';
 import { ActionType, Answer } from '../models';
 import { formatAudioLink } from './utils';
 
-const { ar, id, meta } = loadQuran();
+const { ar, id, meta, tafsirs: idTafsirs } = loadQuran();
 
 export function getVerseRange(
   chapterNo: number,
@@ -30,6 +30,11 @@ export function getVerseRange(
     formatAudioLink(verse.chapter, verse.verse)
   );
 
+  const tafsirs = idTafsirs[0].verses.filter(
+    (v) =>
+      v.chapter === chapterNo && v.verse >= verseStart && v.verse <= verseEnd
+  );
+
   return {
     source: 'quran',
     action,
@@ -38,6 +43,7 @@ export function getVerseRange(
       verses,
       translations,
       audios,
+      tafsirs,
       next: true,
     },
   };
@@ -51,15 +57,18 @@ export function getVersesByIds(verseIds: number[]): Answer {
       verses: [],
       translations: [],
       audios: [],
+      tafsirs: [],
     },
   };
 
   for (const verseId of verseIds) {
     const verse = ar.verses.find((v) => v.id === verseId);
     const trans = id.verses.find((v) => v.id === verseId);
+    const tafsir = idTafsirs[0].verses.find((v) => v.id === verseId);
 
     answer.data.verses.push(verse);
     answer.data.translations.push(trans);
+    answer.data.tafsirs.push(tafsir);
   }
 
   // list chapter
@@ -81,6 +90,7 @@ export function getRandomVerse(): Answer {
   const randomIndex = Math.floor(Math.random() * ar.verses.length);
   const verse = ar.verses[randomIndex];
   const translation = id.verses[randomIndex];
+  const tafsir = idTafsirs[0].verses[randomIndex];
   const audio = formatAudioLink(verse.chapter, verse.verse);
 
   return {
@@ -90,6 +100,7 @@ export function getRandomVerse(): Answer {
       chapter: id.chapters[verse.chapter - 1],
       verses: [verse],
       translations: [translation],
+      tafsirs: [tafsir],
       audios: [audio],
       next: false,
     },
