@@ -102,6 +102,29 @@ function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
     ],
   });
 
+  // intent for tafsir
+  data.push({
+    intent: 'tafsir',
+    utterances: [
+      'tafsir surat @chapter',
+      'tafsir surat @chapter_no',
+      'tafsir surat @chapter ayat @verse_no',
+      'tafsir surat @chapter_no ayat @verse_no',
+      'tafsir surat @chapter ayat @verse_range',
+      'tafsir surat @chapter_no ayat @verse_range',
+      'tafsir @chapter @verse_no',
+      'tafsir @chapter_no @verse_no',
+      'tafsir @chapter @verse_range',
+      'tafsir @chapter_no @verse_range',
+    ],
+    actions: [
+      {
+        name: 'getTafsir',
+        parameters: ['@chapter', '@chapter_no', '@verse_no', '@verse_range'],
+      },
+    ],
+  });
+
   // intent for audio
   data.push({
     intent: 'audio',
