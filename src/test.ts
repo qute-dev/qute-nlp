@@ -11,8 +11,11 @@ import { initSearch } from './bot/search';
 async function testQuestion(text: string) {
   const resp = await processAnswer(text);
   const answer = await getAnswer(resp, 'TEST');
+  const answerText = answer.text
+    ? `${answer.text.substring(0, 10)}...`
+    : undefined;
 
-  log(`[TEST] ${text} -> ${answer.text || answer.data?.translations.length}`);
+  log(`[TEST] ${text} -> ${answerText || answer.data?.translations.length}`);
 
   debug(`[TEST] intent: ${resp.intent}`);
   debug('[TEST] entities:', resp.entities);
@@ -44,16 +47,16 @@ async function testIndex() {
   answer = await testQuestion('baqara');
   assert(
     answer.data.chapter.id === 2 &&
-      answer.data.verses.length === 10 &&
-      answer.data.translations.length === 10
+      answer.data.verses.length === 7 &&
+      answer.data.translations.length === 7
   );
 
   // lanjut
   answer = await testQuestion('lanjut');
   assert(
     answer.data.chapter.id === 2 &&
-      answer.data.verses.length === 10 &&
-      answer.data.translations.length === 10
+      answer.data.verses.length === 7 &&
+      answer.data.translations.length === 7
   );
 
   // ayat lengkap
@@ -61,7 +64,7 @@ async function testIndex() {
   assert(answer.data.chapter.id === 1 && answer.data.verses.length === 1);
 
   // ayat angka
-  answer = await testQuestion('surat 2 ayat 10');
+  answer = await testQuestion('surat 2 ayat 7');
   assert(answer.data.chapter.id === 2 && answer.data.verses.length === 1);
 
   // ayat simple
@@ -86,11 +89,11 @@ async function testSearch() {
 
   // dg cari
   answer = await testQuestion('cari manusia');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  assert(!answer.data.chapter && answer.data.verses.length === 7);
 
   // dg cari nama surat
   answer = await testQuestion('cari maryam');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  assert(!answer.data.chapter && answer.data.verses.length === 7);
 
   // cari kata cari
   answer = await testQuestion('cari mencari');
@@ -106,11 +109,11 @@ async function testSearch() {
 
   // tanpa kata cari
   answer = await testQuestion('surga neraka');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  assert(!answer.data.chapter && answer.data.verses.length === 7);
 
   // next hasil cari
   answer = await testQuestion('next');
-  assert(!answer.data.chapter && answer.data.verses.length === 10);
+  assert(!answer.data.chapter && answer.data.verses.length === 7);
 
   // cari yg ga ada
   answer = await testQuestion('pacul');
@@ -127,20 +130,20 @@ async function testCache() {
 
   // surat
   answer = await testQuestion('surat albaqara');
-  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
+  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 7);
 
   // cek cache
   cache = await getCache();
-  assert(cache['TEST'].length === answer.data.chapter.verses - 10);
+  assert(cache['TEST'].length === answer.data.chapter.verses - 7);
 
   for (let i = 2; i <= 5; i++) {
     // lanjut
     answer = await testQuestion('lanjut');
-    assert(answer.data.chapter.id === 2 && answer.data.verses.length === 10);
+    assert(answer.data.chapter.id === 2 && answer.data.verses.length === 7);
 
     // cek cache lagi
     cache = await getCache();
-    assert(cache['TEST'].length === answer.data.chapter.verses - 10 * i);
+    assert(cache['TEST'].length === answer.data.chapter.verses - 7 * i);
   }
 }
 
@@ -169,6 +172,14 @@ async function testTafsir() {
   // tafsir for specific chapter by name
   answer = await testQuestion('tafsir surat albaqara');
   assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+
+  // TODO: next tafsir result
+  // answer = await testQuestion('lanjut');
+  // assert(
+  //   answer.action === 'tafsir' &&
+  //     answer.data.chapter.id === 2 &&
+  //     answer.data.verses.length === 7
+  // );
 
   // tafsir for specific chapter by number
   answer = await testQuestion('tafsir surat 2');
@@ -214,7 +225,7 @@ async function testAudio() {
   let answer: Answer;
 
   answer = await testQuestion('putar audio surat albaqara');
-  assert(answer.action === 'audio' && answer.data.audios.length === 10);
+  assert(answer.action === 'audio' && answer.data.audios.length === 7);
 
   answer = await testQuestion('audio surat 1 ayat 1-3');
   assert(answer.action === 'audio' && answer.data.audios.length === 3);
@@ -223,6 +234,22 @@ async function testAudio() {
   assert(answer.action === 'audio' && answer.data.audios.length > 1);
 
   // TODO: audio per chapter only
+}
+
+async function testUsage() {
+  let answer: Answer;
+
+  answer = await testQuestion('cara pakai');
+  assert(answer.action === 'usage' && !!answer.text);
+
+  answer = await testQuestion('cara kerja');
+  assert(answer.action === 'usage' && !!answer.text);
+
+  answer = await testQuestion('bagaimana cara menggunakan');
+  assert(answer.action === 'usage' && !!answer.text);
+
+  answer = await testQuestion('bagaimana cara kerja bot ini');
+  assert(answer.action === 'usage' && !!answer.text);
 }
 
 async function runTest() {
@@ -236,6 +263,7 @@ async function runTest() {
   await testRandom();
   await testTafsir();
   await testAudio();
+  await testUsage();
 
   process.exit(0);
 }
