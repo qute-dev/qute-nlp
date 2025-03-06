@@ -8,6 +8,7 @@ export type ActionType =
   | 'audio'
   | 'greeting'
   | 'next'
+  | 'usage'
   | 'none';
 
 export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
