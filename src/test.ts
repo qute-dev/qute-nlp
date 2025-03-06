@@ -41,14 +41,20 @@ async function testIndex() {
 
   // surat
   answer = await testQuestion('surat albaqara');
-  assert(answer.data.chapter.id === 2);
+  assert(
+    answer.data.chapter.id === 2 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 
   // surat simple
   answer = await testQuestion('baqara');
   assert(
     answer.data.chapter.id === 2 &&
       answer.data.verses.length === 7 &&
-      answer.data.translations.length === 7
+      answer.data.translations.length === 7 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
   );
 
   // lanjut
@@ -56,32 +62,64 @@ async function testIndex() {
   assert(
     answer.data.chapter.id === 2 &&
       answer.data.verses.length === 7 &&
-      answer.data.translations.length === 7
+      answer.data.translations.length === 7 &&
+      answer.action === 'next' &&
+      answer.source === 'quran'
   );
 
   // ayat lengkap
   answer = await testQuestion('surat alfatihah ayat 5');
-  assert(answer.data.chapter.id === 1 && answer.data.verses.length === 1);
+  assert(
+    answer.data.chapter.id === 1 &&
+      answer.data.verses.length === 1 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 
   // ayat angka
   answer = await testQuestion('surat 2 ayat 7');
-  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 1);
+  assert(
+    answer.data.chapter.id === 2 &&
+      answer.data.verses.length === 1 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 
   // ayat simple
   answer = await testQuestion('alfatihah 5');
-  assert(answer.data.chapter.id === 1 && answer.data.verses.length === 1);
+  assert(
+    answer.source === 'quran' &&
+      answer.action === 'index' &&
+      answer.data.chapter.id === 1 &&
+      answer.data.verses.length === 1
+  );
 
   // ayat tersimpel
   answer = await testQuestion('2 185');
-  assert(answer.data.chapter.id === 2 && answer.data.verses.length === 1);
+  assert(
+    answer.data.chapter.id === 2 &&
+      answer.data.verses.length === 1 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 
   // ayat range
   answer = await testQuestion('maidah 1-7');
-  assert(answer.data.chapter.id === 5 && answer.data.verses.length === 7);
+  assert(
+    answer.data.chapter.id === 5 &&
+      answer.data.verses.length === 7 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 
   // ayat range simple
   answer = await testQuestion('11 2-4');
-  assert(answer.data.chapter.id === 11 && answer.data.verses.length === 3);
+  assert(
+    answer.data.chapter.id === 11 &&
+      answer.data.verses.length === 3 &&
+      answer.action === 'index' &&
+      answer.source === 'quran'
+  );
 }
 
 async function testSearch() {
@@ -89,39 +127,79 @@ async function testSearch() {
 
   // dg cari
   answer = await testQuestion('cari manusia');
-  assert(!answer.data.chapter && answer.data.verses.length === 7);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 7 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // dg cari nama surat
   answer = await testQuestion('cari maryam');
-  assert(!answer.data.chapter && answer.data.verses.length === 7);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 7 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // cari kata cari
   answer = await testQuestion('cari mencari');
-  assert(!answer.data.chapter && answer.data.verses.length > 0);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length > 0 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // jodoh
   answer = await testQuestion('jodoh');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 0 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // dg cari jodoh
   answer = await testQuestion('cari jodoh');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 0 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // tanpa kata cari
   answer = await testQuestion('surga neraka');
-  assert(!answer.data.chapter && answer.data.verses.length === 7);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 7 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // next hasil cari
   answer = await testQuestion('next');
-  assert(!answer.data.chapter && answer.data.verses.length === 7);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 7 &&
+      answer.action === 'next' &&
+      answer.source === 'quran'
+  );
 
   // cari yg ga ada
   answer = await testQuestion('pacul');
-  assert(!answer.data.chapter && answer.data.verses.length === 0);
+  assert(
+    !answer.data.chapter &&
+      answer.data.verses.length === 0 &&
+      answer.action === 'search' &&
+      answer.source === 'quran'
+  );
 
   // TODO: cari di surat tertentu
   // answer = await testQuestion('cari allah di al baqarah');
-  // assert(answer.data.chapter && answer.data.verses.length > 1);
+  // assert(answer.data.chapter && answer.data.verses.length > 1 && answer.action === 'search' && answer.source === 'quran');
 }
 
 async function testCache() {
@@ -151,19 +229,39 @@ async function testRandom() {
   let answer: Answer;
 
   answer = await testQuestion('random');
-  assert(!!answer.text || answer.data?.translations.length == 1);
+  assert(
+    (!!answer.text || answer.data?.translations.length == 1) &&
+      answer.action === 'random' &&
+      answer.source === 'quran'
+  );
 
   answer = await testQuestion('random ayat');
-  assert(!!answer.text || answer.data?.translations.length == 1);
+  assert(
+    (!!answer.text || answer.data?.translations.length == 1) &&
+      answer.action === 'random' &&
+      answer.source === 'quran'
+  );
 
   answer = await testQuestion('ayat random');
-  assert(!!answer.text || answer.data?.translations.length == 1);
+  assert(
+    (!!answer.text || answer.data?.translations.length == 1) &&
+      answer.action === 'random' &&
+      answer.source === 'quran'
+  );
 
   answer = await testQuestion('ayat acak');
-  assert(!!answer.text || answer.data?.translations.length == 1);
+  assert(
+    (!!answer.text || answer.data?.translations.length == 1) &&
+      answer.action === 'random' &&
+      answer.source === 'quran'
+  );
 
   answer = await testQuestion('minta ayat acak');
-  assert(!!answer.text || answer.data?.translations.length == 1);
+  assert(
+    (!!answer.text || answer.data?.translations.length == 1) &&
+      answer.action === 'random' &&
+      answer.source === 'quran'
+  );
 }
 
 async function testTafsir() {
@@ -274,13 +372,25 @@ async function testAudio() {
   let answer: Answer;
 
   answer = await testQuestion('putar audio surat albaqara');
-  assert(answer.action === 'audio' && answer.data.audios.length === 7);
+  assert(
+    answer.action === 'audio' &&
+      answer.source === 'quran' &&
+      answer.data.audios.length === 7
+  );
 
   answer = await testQuestion('audio surat 1 ayat 1-3');
-  assert(answer.action === 'audio' && answer.data.audios.length === 3);
+  assert(
+    answer.action === 'audio' &&
+      answer.source === 'quran' &&
+      answer.data.audios.length === 3
+  );
 
   answer = await testQuestion('audio surat an naas');
-  assert(answer.action === 'audio' && answer.data.audios.length > 1);
+  assert(
+    answer.action === 'audio' &&
+      answer.source === 'quran' &&
+      answer.data.audios.length > 1
+  );
 
   // TODO: audio per chapter only
 }

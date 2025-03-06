@@ -14,6 +14,8 @@ const records = new Map<
 
 const MAX_RESULT = 7;
 
+const intentIndex = ['chapter', 'verse', 'verses', 'tafsir', 'other'];
+
 export function getCache() {
   const cache = {} as any;
 
@@ -26,6 +28,8 @@ export function getCache() {
 
 export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   const { intent, entities } = resp;
+
+  // console.log('resp', resp);
 
   let answer: Answer = {};
 
@@ -101,8 +105,14 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     const verseIds = nexts.filter((v) => !!v).map((v) => v.id);
 
     const userRecord = records.get(user);
-    const prevAction = intent === 'tafsir' ? 'index' : (intent as ActionType);
     const prevSource = userRecord ? userRecord.source : answer.source;
+
+    // convert intent to action
+    const prevAction = intentIndex.includes(intent)
+      ? 'index'
+      : intent === 'None'
+      ? answer.action
+      : (intent as ActionType);
 
     // TODO: ini override,
     records.set(user, {
@@ -144,6 +154,12 @@ function getNextAnswer(user: string): Answer {
 }
 
 function getEntityAnswer(entities: any[], intent: string): Answer {
+  let action: ActionType = 'index';
+  const source: SourceType = intent === 'tafsir' ? 'tafsir' : 'quran';
+
+  if (intentIndex.includes(intent)) action = 'index';
+  else action = intent as ActionType;
+
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
   );
@@ -165,6 +181,11 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     chapterNoEntity,
     chapterEntity,
   };
+
+  // kalau intent ga kedetek, coba cari entity
+  if (intent === 'None' && (verseEntity.length || verseRangeEntity.length)) {
+    action = 'index';
+  }
 
   debug('[BOT] getAnswer:entities', ents);
 
@@ -209,7 +230,7 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     verseStart,
     verseEnd || verseStart,
     // TODO: tafsir index & search
-    intent === 'tafsir' ? 'index' : (intent as ActionType),
-    intent === 'tafsir' ? 'tafsir' : 'quran'
+    action,
+    source
   );
 }

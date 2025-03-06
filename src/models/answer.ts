@@ -2,13 +2,13 @@ import { Chapter, TafsirVerse, Verse } from 'qute-corpus';
 
 // TODO: perlu mapping intent ke action
 export type ActionType =
-  | 'search'
   | 'index'
+  | 'search'
   | 'random'
   | 'audio'
   | 'greeting'
-  | 'next'
   | 'usage'
+  | 'next'
   | 'none';
 
 export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
