@@ -1,7 +1,7 @@
 import { loadQuran } from 'qute-corpus';
 import { Response, Answer, ActionType } from '../models';
 import { debug } from '../logger';
-import { getGreeting } from './greeting';
+import { getGreeting, getUsage } from './other';
 import { searchQuran } from './search';
 import { getRandomVerse, getVerseRange, getVersesByIds } from './verse';
 
@@ -34,6 +34,11 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     records.delete(user);
     answer = getGreeting(resp);
 
+    return answer;
+  }
+  // usage
+  else if (intent === 'usage') {
+    answer = getUsage(resp);
     return answer;
   }
   // lanjut sesuai record

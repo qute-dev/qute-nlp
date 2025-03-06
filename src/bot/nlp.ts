@@ -46,6 +46,7 @@ async function getConfig() {
         corpora: [
           path.join(corpusDir, 'greeting.json'),
           path.join(corpusDir, 'quran-id.json'),
+          path.join(corpusDir, 'usage.json'),
         ],
       },
     },

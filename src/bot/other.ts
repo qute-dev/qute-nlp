@@ -10,3 +10,13 @@ export function getGreeting(resp: Response): Answer {
     text: resp.answer || resp.answers[0],
   };
 }
+
+export function getUsage(resp: Response): Answer {
+  debug('[BOT] getUsage', { intent: resp.intent });
+
+  return {
+    source: 'other',
+    action: 'usage',
+    text: resp.answer || resp.answers[0],
+  };
+}
