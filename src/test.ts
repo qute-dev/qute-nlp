@@ -134,7 +134,7 @@ async function testCache() {
 
   // cek cache
   cache = await getCache();
-  assert(cache['TEST'].length === answer.data.chapter.verses - 7);
+  assert(cache['TEST'].verses.length === answer.data.chapter.verses - 7);
 
   for (let i = 2; i <= 5; i++) {
     // lanjut
@@ -143,7 +143,7 @@ async function testCache() {
 
     // cek cache lagi
     cache = await getCache();
-    assert(cache['TEST'].length === answer.data.chapter.verses - 7 * i);
+    assert(cache['TEST'].verses.length === answer.data.chapter.verses - 7 * i);
   }
 }
 
@@ -171,54 +171,103 @@ async function testTafsir() {
 
   // tafsir for specific chapter by name
   answer = await testQuestion('tafsir surat albaqara');
-  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.chapter.id === 2
+  );
 
   // TODO: next tafsir result
-  // answer = await testQuestion('lanjut');
-  // assert(
-  //   answer.action === 'tafsir' &&
-  //     answer.data.chapter.id === 2 &&
-  //     answer.data.verses.length === 7
-  // );
+  answer = await testQuestion('lanjut');
+  assert(
+    answer.action === 'next' &&
+      answer.source === 'tafsir' &&
+      answer.data.chapter.id === 2 &&
+      answer.data.verses.length === 7
+  );
 
   // tafsir for specific chapter by number
   answer = await testQuestion('tafsir surat 2');
-  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.chapter.id === 2
+  );
 
   // tafsir for specific verse in chapter by name
   answer = await testQuestion('tafsir surat albaqara ayat 1');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 1
+  );
 
   // tafsir for specific verse in chapter by number
   answer = await testQuestion('tafsir surat 2 ayat 1');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 1
+  );
 
   // tafsir for verse range in chapter by name
   answer = await testQuestion('tafsir surat albaqara ayat 1-5');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 5
+  );
 
   // tafsir for verse range in chapter by number
   answer = await testQuestion('tafsir surat 2 ayat 1-5');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 5
+  );
 
   // additional tests without 'surat' and 'ayat' keywords
   answer = await testQuestion('tafsir albaqara');
-  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.chapter.id === 2
+  );
 
   answer = await testQuestion('tafsir 2');
-  assert(answer.action === 'tafsir' && answer.data.chapter.id === 2);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.chapter.id === 2
+  );
 
   answer = await testQuestion('tafsir albaqara 1');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 1
+  );
 
   answer = await testQuestion('tafsir 2 1');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 1);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 1
+  );
 
   answer = await testQuestion('tafsir albaqara 1-5');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 5
+  );
 
   answer = await testQuestion('tafsir 2 1-5');
-  assert(answer.action === 'tafsir' && answer.data.verses.length === 5);
+  assert(
+    answer.action === 'index' &&
+      answer.source === 'tafsir' &&
+      answer.data.verses.length === 5
+  );
 }
 
 async function testAudio() {
