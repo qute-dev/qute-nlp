@@ -9,7 +9,12 @@ const { meta } = loadQuran();
 
 const records = new Map<
   string,
-  { action: ActionType; source: SourceType; verses: number[] }
+  {
+    action: ActionType;
+    source: SourceType;
+    lastVerse: number;
+    verses: number[];
+  }
 >(); // user => [verseId]
 
 const MAX_RESULT = 7;
@@ -28,8 +33,6 @@ export function getCache() {
 
 export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   const { intent, entities } = resp;
-
-  // console.log('resp', resp);
 
   let answer: Answer = {};
 
@@ -119,14 +122,31 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
       action: prevAction,
       source: prevSource,
       verses: verseIds,
+      lastVerse: verseIds[verseIds.length - 1],
     });
 
     answer.source = prevSource;
     answer.action = prevAction;
-  } else if (answer.data) {
-    // jawaban kurang dari MAX_RESULT, ga perlu next
-    answer.data.next = false;
-    records.delete(user);
+  } else if (answer.data && answer.action === 'index') {
+    // jawaban kurang dari MAX_RESULT, next last verse aja
+    const rec = records.get(user);
+
+    // jangan melebihi total ayat
+    const lastVerse = answer.data.verses[answer.data.verses.length - 1].id;
+
+    if (lastVerse + 1 >= meta.verses.length) {
+      answer.data.next = false;
+      records.delete(user);
+    } else {
+      answer.data.next = true;
+      // reset history user saja
+      records.set(user, {
+        action: rec?.action || answer.action,
+        source: rec?.source || answer.source,
+        verses: [],
+        lastVerse,
+      });
+    }
   }
 
   // ga ada ayat
@@ -142,7 +162,7 @@ function getNextAnswer(user: string): Answer {
 
   const last = records.get(user);
 
-  if (!last || !last.verses.length) {
+  if (!last || last.lastVerse + 1 > meta.verses.length) {
     return {
       source: 'cache',
       action: 'none',
@@ -150,7 +170,21 @@ function getNextAnswer(user: string): Answer {
     };
   }
 
-  return getVersesByIds(last.verses);
+  if (last.verses?.length) return getVersesByIds(last.verses);
+
+  // else, ga ada next answer, ambil ayat berikutnya
+  const lastVerse = last.lastVerse + 1;
+
+  records.set(user, {
+    action: 'next',
+    source: last.source,
+    verses: [],
+    lastVerse,
+  });
+
+  const answer = getVersesByIds([lastVerse]);
+  answer.action = 'next';
+  return answer;
 }
 
 function getEntityAnswer(entities: any[], intent: string): Answer {

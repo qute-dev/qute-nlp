@@ -411,6 +411,28 @@ async function testUsage() {
   assert(answer.action === 'usage' && !!answer.text);
 }
 
+async function testNext() {
+  let answer: Answer;
+
+  // surat albaqarah, next normal
+  answer = await testQuestion('surat albaqara');
+  answer = await testQuestion('lanjut');
+  assert(
+    answer.action === 'next' &&
+      answer.source === 'quran' &&
+      answer.data.verses.length === 7
+  );
+
+  // ga ada next, 1 ayat
+  answer = await testQuestion('surat alfatihah');
+  answer = await testQuestion('lanjut');
+  assert(
+    answer.action === 'next' &&
+      answer.source === 'quran' &&
+      answer.data.verses.length === 1
+  );
+}
+
 async function runTest() {
   await initNlp();
   await initSearch();
@@ -423,6 +445,7 @@ async function runTest() {
   await testTafsir();
   await testAudio();
   await testUsage();
+  await testNext();
 
   process.exit(0);
 }
