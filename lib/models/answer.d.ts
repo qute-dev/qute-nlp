@@ -1,5 +1,5 @@
 import { Chapter, TafsirVerse, Verse } from 'qute-corpus';
-export type ActionType = 'search' | 'index' | 'random' | 'tafsir' | 'audio' | 'greeting' | 'next' | 'none';
+export type ActionType = 'index' | 'search' | 'random' | 'audio' | 'greeting' | 'usage' | 'next' | 'none';
 export type SourceType = 'quran' | 'tafsir' | 'cache' | 'other';
 export interface Answer {
     source?: SourceType;
