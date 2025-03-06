@@ -33,6 +33,7 @@ async function buildEntities(meta: Meta) {
   return { chapter: { options }, ...regexEntities };
 }
 
+// TODO: mapping intent ke action & source type
 function buildIntents(corpus: { meta: Meta; ar: Quran; id: Quran }): any[] {
   log('Building intents...');
 
