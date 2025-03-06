@@ -1,7 +1,7 @@
 import { loadQuran, Verse, TafsirVerse } from 'qute-corpus';
 
 import { debug } from '../logger';
-import { ActionType, Answer } from '../models';
+import { ActionType, Answer, SourceType } from '../models';
 import { formatAudioLink } from './utils';
 
 const { ar, id, meta, tafsirs: idTafsirs } = loadQuran();
@@ -10,7 +10,8 @@ export function getVerseRange(
   chapterNo: number,
   verseStart: number,
   verseEnd: number,
-  action: ActionType = 'index'
+  action: ActionType = 'index',
+  source: SourceType = 'quran'
 ): Answer {
   debug('[BOT] getVerses', { chapterNo, verseStart, verseEnd });
 
@@ -36,7 +37,7 @@ export function getVerseRange(
   );
 
   return {
-    source: 'quran',
+    source,
     action,
     data: {
       chapter,

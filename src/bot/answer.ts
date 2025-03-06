@@ -1,5 +1,5 @@
 import { loadQuran } from 'qute-corpus';
-import { Response, Answer, ActionType } from '../models';
+import { Response, Answer, ActionType, SourceType } from '../models';
 import { debug } from '../logger';
 import { getGreeting, getUsage } from './other';
 import { searchQuran } from './search';
@@ -7,7 +7,11 @@ import { getRandomVerse, getVerseRange, getVersesByIds } from './verse';
 
 const { meta } = loadQuran();
 
-const records = new Map<string, number[]>(); // user => [verseId]
+const records = new Map<
+  string,
+  { action: ActionType; source: SourceType; verses: number[] }
+>(); // user => [verseId]
+
 const MAX_RESULT = 7;
 
 export function getCache() {
@@ -96,7 +100,19 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     // simpan ke record
     const verseIds = nexts.filter((v) => !!v).map((v) => v.id);
 
-    records.set(user, verseIds);
+    const userRecord = records.get(user);
+    const prevAction = intent === 'tafsir' ? 'index' : (intent as ActionType);
+    const prevSource = userRecord ? userRecord.source : answer.source;
+
+    // TODO: ini override,
+    records.set(user, {
+      action: prevAction,
+      source: prevSource,
+      verses: verseIds,
+    });
+
+    answer.source = prevSource;
+    answer.action = prevAction;
   } else if (answer.data) {
     // jawaban kurang dari MAX_RESULT, ga perlu next
     answer.data.next = false;
@@ -114,9 +130,9 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
 function getNextAnswer(user: string): Answer {
   debug('[BOT] getNextAnswer', user);
 
-  const lasts = records.get(user);
+  const last = records.get(user);
 
-  if (!lasts || !lasts.length) {
+  if (!last || !last.verses.length) {
     return {
       source: 'cache',
       action: 'none',
@@ -124,7 +140,7 @@ function getNextAnswer(user: string): Answer {
     };
   }
 
-  return getVersesByIds(lasts);
+  return getVersesByIds(last.verses);
 }
 
 function getEntityAnswer(entities: any[], intent: string): Answer {
@@ -192,6 +208,8 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     chapter,
     verseStart,
     verseEnd || verseStart,
-    intent as ActionType
+    // TODO: tafsir index & search
+    intent === 'tafsir' ? 'index' : (intent as ActionType),
+    intent === 'tafsir' ? 'tafsir' : 'quran'
   );
 }
