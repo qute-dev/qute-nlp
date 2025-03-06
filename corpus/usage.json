@@ -1,0 +1,30 @@
+{
+  "name": "Usage ID",
+  "locale": "id-ID",
+  "data": [
+    {
+      "intent": "usage",
+      "utterances": [
+        "cara pakai",
+        "cara kerja",
+        "bagaimana cara menggunakan",
+        "cara pakai bot ini",
+        "cara kerja bot ini",
+        "cara menggunakan",
+        "bagaimana cara pakai",
+        "bagaimana cara kerja",
+        "bagaimana cara menggunakan bot ini",
+        "cara menggunakan bot ini",
+        "bagaimana cara pakai bot ini",
+        "bagaimana cara kerja bot ini"
+      ],
+      "answers": [
+        "Gini nih cara pakai bot ini:\n\n1. **Cari Surat**: Kamu bisa cari surat dengan perintah kayak 'surat al-baqarah' atau 'surat 2'.\n2. **Cari Ayat**: Kamu bisa cari ayat dengan perintah: 'surat al-baqarah ayat 1' atau 'surat 2 ayat 1'.\n3. **Cari Rentang Ayat**: Kamu bisa cari rentang ayat dengan perintah spt: 'surat al-baqarah ayat 1-5' atau 'surat 2 ayat 1-5'.\n4. **Cari Tafsir**: Kamu bisa cari tafsir dengan perintah kayak 'tafsir surat al-baqarah' atau 'tafsir surat 2 ayat 1'.\n5. **Dengerin Audio**: Kamu bisa dengerin audio dengan perintah: 'audio surat al-baqarah' atau 'audio surat 2 ayat 1'.\n6. **Cari Kata Kunci**: Kamu bisa cari kata kunci dengan perintah kayak 'cari manusia' atau 'cari surga'.\n7. **Lanjut Cari**: Kamu bisa melanjutkan hasil pencarian dengan perintah 'lanjut' atau 'next'.\n8. **Mau dapet Ayat Acak?**: Kamu bisa dapet ayat acak dengan perintah: 'acak' atau 'random'.",
+        "Begini cara menggunakan bot ini:\n\n1. **Cari Surat**: Kamu bisa mencari surat dengan mengetik 'surat al-baqarah' atau 'surat 2'.\n2. **Cari Ayat**: Kamu bisa mencari ayat dengan mengetik: 'surat al-baqarah ayat 1' atau 'surat 2 ayat 1'.\n3. **Cari Rentang Ayat**: Kamu bisa mencari rentang ayat dengan mengetik: 'surat al-baqarah ayat 1-5' atau 'surat 2 ayat 1-5'.\n4. **Cari Tafsir**: Kamu bisa mencari tafsir dengan mengetik 'tafsir surat al-baqarah' atau 'tafsir surat 2 ayat 1'.\n5. **Dengarkan Audio**: Kamu bisa mendengarkan audio dengan mengetik: 'audio surat al-baqarah' atau 'audio surat 2 ayat 1'.\n6. **Cari Kata Kunci**: Kamu bisa mencari kata kunci dengan mengetik 'cari manusia' atau 'cari surga'.\n7. **Lanjutkan Pencarian**: Kamu bisa melanjutkan hasil pencarian dengan mengetik 'lanjut' atau 'next'.\n8. **Ingin Ayat Acak?**: Kamu bisa mendapatkan ayat acak dengan mengetik: 'acak' atau 'random'.",
+        "Cara pakai bot ini adalah sebagai berikut:\n\n1. **Cari Surat**: Kamu bisa mencari surat dengan perintah 'surat al-baqarah' atau 'surat 2'.\n2. **Cari Ayat**: Kamu bisa mencari ayat dengan perintah: 'surat al-baqarah ayat 1' atau 'surat 2 ayat 1'.\n3. **Cari Rentang Ayat**: Kamu bisa mencari rentang ayat dengan perintah: 'surat al-baqarah ayat 1-5' atau 'surat 2 ayat 1-5'.\n4. **Cari Tafsir**: Kamu bisa mencari tafsir dengan perintah 'tafsir surat al-baqarah' atau 'tafsir surat 2 ayat 1'.\n5. **Dengarkan Audio**: Kamu bisa mendengarkan audio dengan perintah: 'audio surat al-baqarah' atau 'audio surat 2 ayat 1'.\n6. **Cari Kata Kunci**: Kamu bisa mencari kata kunci dengan perintah 'cari manusia' atau 'cari surga'.\n7. **Lanjutkan Pencarian**: Kamu bisa melanjutkan hasil pencarian dengan perintah 'lanjut' atau 'next'.\n8. **Ingin Ayat Acak?**: Kamu bisa mendapatkan ayat acak dengan perintah: 'acak' atau 'random'.",
+        "Untuk menggunakan bot ini, ikuti langkah-langkah berikut:\n\n1. **Cari Surat**: Kamu bisa mencari surat dengan mengetik 'surat al-baqarah' atau 'surat 2'.\n2. **Cari Ayat**: Kamu bisa mencari ayat dengan mengetik: 'surat al-baqarah ayat 1' atau 'surat 2 ayat 1'.\n3. **Cari Rentang Ayat**: Kamu bisa mencari rentang ayat dengan mengetik: 'surat al-baqarah ayat 1-5' atau 'surat 2 ayat 1-5'.\n4. **Cari Tafsir**: Kamu bisa mencari tafsir dengan mengetik 'tafsir surat al-baqarah' atau 'tafsir surat 2 ayat 1'.\n5. **Dengarkan Audio**: Kamu bisa mendengarkan audio dengan mengetik: 'audio surat al-baqarah' atau 'audio surat 2 ayat 1'.\n6. **Cari Kata Kunci**: Kamu bisa mencari kata kunci dengan mengetik 'cari manusia' atau 'cari surga'.\n7. **Lanjutkan Pencarian**: Kamu bisa melanjutkan hasil pencarian dengan mengetik 'lanjut' atau 'next'.\n8. **Ingin Ayat Acak?**: Kamu bisa mendapatkan ayat acak dengan mengetik: 'acak' atau 'random'.",
+        "Berikut cara menggunakan bot ini:\n\n1. **Cari Surat**: Kamu bisa mencari surat dengan perintah 'surat al-baqarah' atau 'surat 2'.\n2. **Cari Ayat**: Kamu bisa mencari ayat dengan perintah: 'surat al-baqarah ayat 1' atau 'surat 2 ayat 1'.\n3. **Cari Rentang Ayat**: Kamu bisa mencari rentang ayat dengan perintah: 'surat al-baqarah ayat 1-5' atau 'surat 2 ayat 1-5'.\n4. **Cari Tafsir**: Kamu bisa mencari tafsir dengan perintah 'tafsir surat al-baqarah' atau 'tafsir surat 2 ayat 1'.\n5. **Dengarkan Audio**: Kamu bisa mendengarkan audio dengan perintah: 'audio surat al-baqarah' atau 'audio surat 2 ayat 1'.\n6. **Cari Kata Kunci**: Kamu bisa mencari kata kunci dengan perintah 'cari manusia' atau 'cari surga'.\n7. **Lanjutkan Pencarian**: Kamu bisa melanjutkan hasil pencarian dengan perintah 'lanjut' atau 'next'.\n8. **Ingin Ayat Acak?**: Kamu bisa mendapatkan ayat acak dengan perintah: 'acak' atau 'random'."
+      ]
+    }
+  ]
+}

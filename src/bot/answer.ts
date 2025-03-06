@@ -1,14 +1,20 @@
 import { loadQuran } from 'qute-corpus';
-import { Response, Answer, ActionType } from '../models';
+import { Response, Answer, ActionType, SourceType } from '../models';
 import { debug } from '../logger';
-import { getGreeting } from './greeting';
+import { getGreeting, getUsage } from './other';
 import { searchQuran } from './search';
 import { getRandomVerse, getVerseRange, getVersesByIds } from './verse';
 
 const { meta } = loadQuran();
 
-const records = new Map<string, number[]>(); // user => [verseId]
+const records = new Map<
+  string,
+  { action: ActionType; source: SourceType; verses: number[] }
+>(); // user => [verseId]
+
 const MAX_RESULT = 7;
+
+const intentIndex = ['chapter', 'verse', 'verses', 'tafsir', 'other'];
 
 export function getCache() {
   const cache = {} as any;
@@ -23,6 +29,8 @@ export function getCache() {
 export async function getAnswer(resp: Response, user: string): Promise<Answer> {
   const { intent, entities } = resp;
 
+  // console.log('resp', resp);
+
   let answer: Answer = {};
 
   const keywordsEntity = entities.filter(
@@ -34,6 +42,11 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     records.delete(user);
     answer = getGreeting(resp);
 
+    return answer;
+  }
+  // usage
+  else if (intent === 'usage') {
+    answer = getUsage(resp);
     return answer;
   }
   // lanjut sesuai record
@@ -91,7 +104,25 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
     // simpan ke record
     const verseIds = nexts.filter((v) => !!v).map((v) => v.id);
 
-    records.set(user, verseIds);
+    const userRecord = records.get(user);
+    const prevSource = userRecord ? userRecord.source : answer.source;
+
+    // convert intent to action
+    const prevAction = intentIndex.includes(intent)
+      ? 'index'
+      : intent === 'None'
+      ? answer.action
+      : (intent as ActionType);
+
+    // TODO: ini override,
+    records.set(user, {
+      action: prevAction,
+      source: prevSource,
+      verses: verseIds,
+    });
+
+    answer.source = prevSource;
+    answer.action = prevAction;
   } else if (answer.data) {
     // jawaban kurang dari MAX_RESULT, ga perlu next
     answer.data.next = false;
@@ -109,9 +140,9 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
 function getNextAnswer(user: string): Answer {
   debug('[BOT] getNextAnswer', user);
 
-  const lasts = records.get(user);
+  const last = records.get(user);
 
-  if (!lasts || !lasts.length) {
+  if (!last || !last.verses.length) {
     return {
       source: 'cache',
       action: 'none',
@@ -119,10 +150,16 @@ function getNextAnswer(user: string): Answer {
     };
   }
 
-  return getVersesByIds(lasts);
+  return getVersesByIds(last.verses);
 }
 
 function getEntityAnswer(entities: any[], intent: string): Answer {
+  let action: ActionType = 'index';
+  const source: SourceType = intent === 'tafsir' ? 'tafsir' : 'quran';
+
+  if (intentIndex.includes(intent)) action = 'index';
+  else action = intent as ActionType;
+
   const verseEntity = entities.filter(
     (e) => e.entity === 'verse_no' && e.accuracy >= 0.1
   );
@@ -144,6 +181,11 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     chapterNoEntity,
     chapterEntity,
   };
+
+  // kalau intent ga kedetek, coba cari entity
+  if (intent === 'None' && (verseEntity.length || verseRangeEntity.length)) {
+    action = 'index';
+  }
 
   debug('[BOT] getAnswer:entities', ents);
 
@@ -187,6 +229,8 @@ function getEntityAnswer(entities: any[], intent: string): Answer {
     chapter,
     verseStart,
     verseEnd || verseStart,
-    intent as ActionType
+    // TODO: tafsir index & search
+    action,
+    source
   );
 }
