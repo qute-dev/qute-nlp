@@ -182,8 +182,10 @@ function getNextAnswer(user: string): Answer {
     lastVerse,
   });
 
+  // update index to next-able
   const answer = getVersesByIds([lastVerse]);
   answer.action = 'next';
+  answer.data.next = true;
   return answer;
 }
 

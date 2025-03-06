@@ -420,6 +420,7 @@ async function testNext() {
   assert(
     answer.action === 'next' &&
       answer.source === 'quran' &&
+      answer.data.next &&
       answer.data.verses.length === 7
   );
 
@@ -429,6 +430,7 @@ async function testNext() {
   assert(
     answer.action === 'next' &&
       answer.source === 'quran' &&
+      answer.data.next &&
       answer.data.verses.length === 1
   );
 }
