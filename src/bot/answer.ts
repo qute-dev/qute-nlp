@@ -127,14 +127,18 @@ export async function getAnswer(resp: Response, user: string): Promise<Answer> {
 
     answer.source = prevSource;
     answer.action = prevAction;
-  } else if (answer.data && answer.action === 'index') {
+  } else if (
+    answer.data &&
+    ['index', 'search', 'random'].includes(answer.action)
+  ) {
     // jawaban kurang dari MAX_RESULT, next last verse aja
     const rec = records.get(user);
 
     // jangan melebihi total ayat
-    const lastVerse = answer.data.verses[answer.data.verses.length - 1].id;
+    const lastVerse =
+      answer?.data?.verses[answer?.data?.verses?.length - 1]?.id;
 
-    if (lastVerse + 1 >= meta.verses.length) {
+    if (lastVerse && lastVerse + 1 >= meta.verses.length) {
       answer.data.next = false;
       records.delete(user);
     } else {
