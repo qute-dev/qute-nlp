@@ -1,1 +1,1 @@
-{"version":3,"file":"answer.d.ts","sourceRoot":"","sources":["../../src/bot/answer.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,EAA0B,MAAM,WAAW,CAAC;AAsBrE,wBAAgB,QAAQ,QAQvB;AAED,wBAAsB,SAAS,CAAC,IAAI,EAAE,QAAQ,EAAE,IAAI,EAAE,MAAM,GAAG,OAAO,CAAC,MAAM,CAAC,CA4H7E"}
+{"version":3,"file":"answer.d.ts","sourceRoot":"","sources":["../../src/bot/answer.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,EAA0B,MAAM,WAAW,CAAC;AAsBrE,wBAAgB,QAAQ,QAQvB;AAED,wBAAsB,SAAS,CAAC,IAAI,EAAE,QAAQ,EAAE,IAAI,EAAE,MAAM,GAAG,OAAO,CAAC,MAAM,CAAC,CAgI7E"}
